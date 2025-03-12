@@ -1,0 +1,359 @@
+[gd_scene load_steps=6 format=3 uid="uid://cepdk35r5trb1"]
+
+[sub_resource type="SkeletonModification2DCCDIK" id="SkeletonModification2DCCDIK_00p5s"]
+target_nodepath = NodePath("../Targets/ArmTargetL")
+tip_nodepath = NodePath("Hip/Torso/ShoulderL/UpperArmL/ForearmL/HandL")
+ccdik_data_chain_length = 3
+joint_data/0/bone_index = 6
+joint_data/0/bone2d_node = NodePath("Hip/Torso/ShoulderL/UpperArmL/ForearmL")
+joint_data/0/rotate_from_joint = false
+joint_data/0/enable_constraint = true
+joint_data/0/constraint_angle_min = 210.0
+joint_data/0/constraint_angle_max = 360.0
+joint_data/0/constraint_angle_invert = false
+joint_data/0/constraint_in_localspace = true
+joint_data/0/editor_draw_gizmo = true
+joint_data/1/bone_index = 5
+joint_data/1/bone2d_node = NodePath("Hip/Torso/ShoulderL/UpperArmL")
+joint_data/1/rotate_from_joint = false
+joint_data/1/enable_constraint = true
+joint_data/1/constraint_angle_min = -270.968
+joint_data/1/constraint_angle_max = 179.484
+joint_data/1/constraint_angle_invert = true
+joint_data/1/constraint_in_localspace = true
+joint_data/1/editor_draw_gizmo = true
+joint_data/2/bone_index = 4
+joint_data/2/bone2d_node = NodePath("Hip/Torso/ShoulderL")
+joint_data/2/rotate_from_joint = false
+joint_data/2/enable_constraint = false
+joint_data/2/editor_draw_gizmo = true
+
+[sub_resource type="SkeletonModification2DCCDIK" id="SkeletonModification2DCCDIK_rs728"]
+target_nodepath = NodePath("../Targets/ArmTargetR")
+tip_nodepath = NodePath("Hip/Torso/ShoulderR/UpperArmR/ForearmR/HandR")
+ccdik_data_chain_length = 3
+joint_data/0/bone_index = 10
+joint_data/0/bone2d_node = NodePath("Hip/Torso/ShoulderR/UpperArmR/ForearmR")
+joint_data/0/rotate_from_joint = false
+joint_data/0/enable_constraint = true
+joint_data/0/constraint_angle_min = 204.0
+joint_data/0/constraint_angle_max = 360.0
+joint_data/0/constraint_angle_invert = false
+joint_data/0/constraint_in_localspace = true
+joint_data/0/editor_draw_gizmo = true
+joint_data/1/bone_index = 9
+joint_data/1/bone2d_node = NodePath("Hip/Torso/ShoulderR/UpperArmR")
+joint_data/1/rotate_from_joint = false
+joint_data/1/enable_constraint = true
+joint_data/1/constraint_angle_min = 160.0
+joint_data/1/constraint_angle_max = 360.0
+joint_data/1/constraint_angle_invert = false
+joint_data/1/constraint_in_localspace = true
+joint_data/1/editor_draw_gizmo = true
+joint_data/2/bone_index = 8
+joint_data/2/bone2d_node = NodePath("Hip/Torso/ShoulderR")
+joint_data/2/rotate_from_joint = false
+joint_data/2/enable_constraint = false
+joint_data/2/editor_draw_gizmo = true
+
+[sub_resource type="SkeletonModification2DCCDIK" id="SkeletonModification2DCCDIK_ti0l5"]
+target_nodepath = NodePath("../Targets/LegTargetL")
+tip_nodepath = NodePath("Hip/ThighL/LowerLegL/FootL")
+ccdik_data_chain_length = 2
+joint_data/0/bone_index = 13
+joint_data/0/bone2d_node = NodePath("Hip/ThighL/LowerLegL")
+joint_data/0/rotate_from_joint = false
+joint_data/0/enable_constraint = true
+joint_data/0/constraint_angle_min = 152.0
+joint_data/0/constraint_angle_max = 360.0
+joint_data/0/constraint_angle_invert = true
+joint_data/0/constraint_in_localspace = true
+joint_data/0/editor_draw_gizmo = true
+joint_data/1/bone_index = 12
+joint_data/1/bone2d_node = NodePath("Hip/ThighL")
+joint_data/1/rotate_from_joint = false
+joint_data/1/enable_constraint = true
+joint_data/1/constraint_angle_min = 44.0
+joint_data/1/constraint_angle_max = 224.0
+joint_data/1/constraint_angle_invert = true
+joint_data/1/constraint_in_localspace = true
+joint_data/1/editor_draw_gizmo = true
+
+[sub_resource type="SkeletonModification2DCCDIK" id="SkeletonModification2DCCDIK_w301v"]
+target_nodepath = NodePath("../Targets/LegTargetR")
+tip_nodepath = NodePath("Hip/ThighR/LowerLegR/FootR")
+ccdik_data_chain_length = 2
+joint_data/0/bone_index = 16
+joint_data/0/bone2d_node = NodePath("Hip/ThighR/LowerLegR")
+joint_data/0/rotate_from_joint = false
+joint_data/0/enable_constraint = true
+joint_data/0/constraint_angle_min = 156.0
+joint_data/0/constraint_angle_max = 360.0
+joint_data/0/constraint_angle_invert = true
+joint_data/0/constraint_in_localspace = true
+joint_data/0/editor_draw_gizmo = true
+joint_data/1/bone_index = 15
+joint_data/1/bone2d_node = NodePath("Hip/ThighR")
+joint_data/1/rotate_from_joint = false
+joint_data/1/enable_constraint = true
+joint_data/1/constraint_angle_min = 44.0
+joint_data/1/constraint_angle_max = 224.0
+joint_data/1/constraint_angle_invert = true
+joint_data/1/constraint_in_localspace = true
+joint_data/1/editor_draw_gizmo = true
+
+[sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_g7xia"]
+enabled = true
+modification_count = 4
+modifications/0 = SubResource("SkeletonModification2DCCDIK_00p5s")
+modifications/1 = SubResource("SkeletonModification2DCCDIK_rs728")
+modifications/2 = SubResource("SkeletonModification2DCCDIK_ti0l5")
+modifications/3 = SubResource("SkeletonModification2DCCDIK_w301v")
+
+[node name="StickMan" type="Node2D"]
+
+[node name="Skeleton2D" type="Skeleton2D" parent="."]
+position = Vector2(400, 300)
+modification_stack = SubResource("SkeletonModificationStack2D_g7xia")
+
+[node name="Hip" type="Bone2D" parent="Skeleton2D"]
+rest = Transform2D(1, 0, 0, 1, 0, 0)
+
+[node name="HipSprite" type="Polygon2D" parent="Skeleton2D/Hip"]
+color = Color(0.45098, 0.45098, 0.45098, 1)
+polygon = PackedVector2Array(-15, -10, 15, -10, 15, 10, -15, 10)
+
+[node name="Torso" type="Bone2D" parent="Skeleton2D/Hip"]
+position = Vector2(0, -20)
+rest = Transform2D(1, 0, 0, 1, 0, -20)
+
+[node name="TorsoSprite" type="Polygon2D" parent="Skeleton2D/Hip/Torso"]
+position = Vector2(0, -30)
+color = Color(0.356863, 0.356863, 0.356863, 1)
+polygon = PackedVector2Array(-15, -30, 15, -30, 15, 30, -15, 30)
+
+[node name="Neck" type="Bone2D" parent="Skeleton2D/Hip/Torso"]
+position = Vector2(0, -60)
+rest = Transform2D(1, 0, 0, 1, 0, -60)
+
+[node name="NeckSprite" type="Polygon2D" parent="Skeleton2D/Hip/Torso/Neck"]
+color = Color(0.827451, 0.686275, 0.54902, 1)
+polygon = PackedVector2Array(-5, -10, 5, -10, 5, 10, -5, 10)
+
+[node name="Head" type="Bone2D" parent="Skeleton2D/Hip/Torso/Neck"]
+position = Vector2(0, -15)
+rest = Transform2D(1, 0, 0, 1, 0, -15)
+
+[node name="HeadSprite" type="Node2D" parent="Skeleton2D/Hip/Torso/Neck/Head"]
+
+[node name="Circle" type="Polygon2D" parent="Skeleton2D/Hip/Torso/Neck/Head/HeadSprite"]
+color = Color(0.827451, 0.686275, 0.54902, 1)
+polygon = PackedVector2Array(0, -20, 5, -19, 10, -17, 14, -14, 17, -10, 19, -5, 20, 0, 19, 5, 17, 10, 14, 14, 10, 17, 5, 19, 0, 20, -5, 19, -10, 17, -14, 14, -17, 10, -19, 5, -20, 0, -19, -5, -17, -10, -14, -14, -10, -17, -5, -19)
+
+[node name="HeadRemote" type="RemoteTransform2D" parent="Skeleton2D/Hip/Torso/Neck/Head"]
+remote_path = NodePath("../HeadSprite")
+update_rotation = false
+update_scale = false
+
+[node name="ShoulderL" type="Bone2D" parent="Skeleton2D/Hip/Torso"]
+position = Vector2(-15, -55)
+rotation = -0.991124
+scale = Vector2(0.999983, 0.999983)
+rest = Transform2D(0.714562, -0.69954, 0.69954, 0.714562, -15, -55)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="UpperArmL" type="Bone2D" parent="Skeleton2D/Hip/Torso/ShoulderL"]
+position = Vector2(-10, 0)
+rest = Transform2D(0.71628, 0.697813, -0.697813, 0.71628, -10.0002, -0.000701904)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="UpperArmSpriteL" type="Polygon2D" parent="Skeleton2D/Hip/Torso/ShoulderL/UpperArmL"]
+scale = Vector2(1.00095, 1.00095)
+color = Color(0.356863, 0.356863, 0.356863, 1)
+offset = Vector2(10, 0)
+polygon = PackedVector2Array(-5, -5, 5, -5, 5, 25, -5, 25)
+
+[node name="UpperArmRemoteL" type="RemoteTransform2D" parent="Skeleton2D/Hip/Torso/ShoulderL/UpperArmL"]
+remote_path = NodePath("../UpperArmSpriteL")
+update_rotation = false
+update_scale = false
+
+[node name="ForearmL" type="Bone2D" parent="Skeleton2D/Hip/Torso/ShoulderL/UpperArmL"]
+position = Vector2(0, 30)
+rest = Transform2D(1, 1.74846e-07, -1.74846e-07, 1, 0.000518799, 30.0019)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="ForearmSpriteL" type="Polygon2D" parent="Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL"]
+rotation = 2.58053e-05
+scale = Vector2(1.00187, 1.00187)
+color = Color(0.827451, 0.686275, 0.54902, 1)
+polygon = PackedVector2Array(-4, -5, 4, -5, 4, 25, -4, 25)
+
+[node name="ForearmRemoteL" type="RemoteTransform2D" parent="Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL"]
+remote_path = NodePath("../ForearmSpriteL")
+update_rotation = false
+update_scale = false
+
+[node name="HandL" type="Bone2D" parent="Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL"]
+position = Vector2(0, 30)
+rest = Transform2D(1, 0, 0, 1, 0, 30)
+
+[node name="HandSpriteL" type="Polygon2D" parent="Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL/HandL"]
+rotation = 1.77437e-05
+scale = Vector2(1.00188, 1.00188)
+color = Color(0.827451, 0.686275, 0.54902, 1)
+polygon = PackedVector2Array(-5, -3, 5, -3, 5, 7, -5, 7)
+
+[node name="HandRemoteL" type="RemoteTransform2D" parent="Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL/HandL"]
+remote_path = NodePath("../HandSpriteL")
+update_rotation = false
+update_scale = false
+
+[node name="ShoulderR" type="Bone2D" parent="Skeleton2D/Hip/Torso"]
+position = Vector2(15, -55)
+rest = Transform2D(0.997856, 0.0654391, -0.0654391, 0.997856, 15, -55)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="UpperArmR" type="Bone2D" parent="Skeleton2D/Hip/Torso/ShoulderR"]
+position = Vector2(10, 0)
+rest = Transform2D(1, 1.74846e-07, -1.74846e-07, 1, 10.0005, -0.00012207)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="UpperArmSpriteR" type="Polygon2D" parent="Skeleton2D/Hip/Torso/ShoulderR/UpperArmR"]
+scale = Vector2(1.00009, 1.00009)
+color = Color(0.356863, 0.356863, 0.356863, 1)
+offset = Vector2(-10, 0)
+polygon = PackedVector2Array(-5, -5, 5, -5, 5, 25, -5, 25)
+
+[node name="UpperArmRemoteR" type="RemoteTransform2D" parent="Skeleton2D/Hip/Torso/ShoulderR/UpperArmR"]
+remote_path = NodePath("../UpperArmSpriteR")
+update_rotation = false
+update_scale = false
+
+[node name="ForearmR" type="Bone2D" parent="Skeleton2D/Hip/Torso/ShoulderR/UpperArmR"]
+position = Vector2(0, 30)
+rest = Transform2D(1, 1.74845e-07, -1.74845e-07, 1, -6.10352e-05, 30.0001)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="ForearmSpriteR" type="Polygon2D" parent="Skeleton2D/Hip/Torso/ShoulderR/UpperArmR/ForearmR"]
+scale = Vector2(1.00016, 1.00016)
+color = Color(0.827451, 0.686275, 0.54902, 1)
+polygon = PackedVector2Array(-4, -5, 4, -5, 4, 25, -4, 25)
+
+[node name="ForearmRemoteR" type="RemoteTransform2D" parent="Skeleton2D/Hip/Torso/ShoulderR/UpperArmR/ForearmR"]
+remote_path = NodePath("../ForearmSpriteR")
+update_rotation = false
+update_scale = false
+
+[node name="HandR" type="Bone2D" parent="Skeleton2D/Hip/Torso/ShoulderR/UpperArmR/ForearmR"]
+position = Vector2(0, 30)
+rest = Transform2D(1, 0, 0, 1, 0, 30)
+
+[node name="HandSpriteR" type="Polygon2D" parent="Skeleton2D/Hip/Torso/ShoulderR/UpperArmR/ForearmR/HandR"]
+scale = Vector2(1.00043, 1.00043)
+color = Color(0.827451, 0.686275, 0.54902, 1)
+polygon = PackedVector2Array(-5, -3, 5, -3, 5, 7, -5, 7)
+
+[node name="HandRemoteR" type="RemoteTransform2D" parent="Skeleton2D/Hip/Torso/ShoulderR/UpperArmR/ForearmR/HandR"]
+remote_path = NodePath("../HandSpriteR")
+update_rotation = false
+update_scale = false
+
+[node name="ThighL" type="Bone2D" parent="Skeleton2D/Hip"]
+position = Vector2(-10, 0)
+rest = Transform2D(0.999453, 0.0329431, -0.0329431, 0.999453, -10, 0)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="ThighSpriteL" type="Polygon2D" parent="Skeleton2D/Hip/ThighL"]
+scale = Vector2(1.00014, 1.00014)
+color = Color(0.356863, 0.356863, 0.356863, 1)
+polygon = PackedVector2Array(-5, -5, 5, -5, 5, 35, -5, 35)
+
+[node name="ThighRemoteL" type="RemoteTransform2D" parent="Skeleton2D/Hip/ThighL"]
+remote_path = NodePath("../ThighSpriteL")
+update_rotation = false
+update_scale = false
+
+[node name="LowerLegL" type="Bone2D" parent="Skeleton2D/Hip/ThighL"]
+position = Vector2(0, 40)
+rest = Transform2D(1, 5.90831e-06, -5.90831e-06, 1, -0.000244141, 40)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="LowerLegSpriteL" type="Polygon2D" parent="Skeleton2D/Hip/ThighL/LowerLegL"]
+scale = Vector2(1.00029, 1.00029)
+color = Color(0.356863, 0.356863, 0.356863, 1)
+polygon = PackedVector2Array(-4, -5, 4, -5, 4, 35, -4, 35)
+
+[node name="LowerLegRemoteL" type="RemoteTransform2D" parent="Skeleton2D/Hip/ThighL/LowerLegL"]
+remote_path = NodePath("../LowerLegSpriteL")
+update_rotation = false
+update_scale = false
+
+[node name="FootL" type="Bone2D" parent="Skeleton2D/Hip/ThighL/LowerLegL"]
+position = Vector2(0, 40)
+rest = Transform2D(1, 0, 0, 1, 0, 40)
+
+[node name="FootSpriteL" type="Polygon2D" parent="Skeleton2D/Hip/ThighL/LowerLegL/FootL"]
+scale = Vector2(1.00046, 1.00046)
+color = Color(0.231373, 0.231373, 0.231373, 1)
+polygon = PackedVector2Array(-5, -3, 15, -3, 15, 5, -5, 5)
+
+[node name="FootRemoteL" type="RemoteTransform2D" parent="Skeleton2D/Hip/ThighL/LowerLegL/FootL"]
+remote_path = NodePath("../FootSpriteL")
+update_rotation = false
+update_scale = false
+
+[node name="ThighR" type="Bone2D" parent="Skeleton2D/Hip"]
+position = Vector2(10, 0)
+rest = Transform2D(1, 0, 0, 1, 10, 0)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="ThighSpriteR" type="Polygon2D" parent="Skeleton2D/Hip/ThighR"]
+color = Color(0.356863, 0.356863, 0.356863, 1)
+polygon = PackedVector2Array(-5, -5, 5, -5, 5, 35, -5, 35)
+
+[node name="ThighRemoteR" type="RemoteTransform2D" parent="Skeleton2D/Hip/ThighR"]
+remote_path = NodePath("../ThighSpriteR")
+update_rotation = false
+update_scale = false
+
+[node name="LowerLegR" type="Bone2D" parent="Skeleton2D/Hip/ThighR"]
+position = Vector2(0, 40)
+rest = Transform2D(1, 0, 0, 1, 0, 40)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="LowerLegSpriteR" type="Polygon2D" parent="Skeleton2D/Hip/ThighR/LowerLegR"]
+color = Color(0.356863, 0.356863, 0.356863, 1)
+polygon = PackedVector2Array(-4, -5, 4, -5, 4, 35, -4, 35)
+
+[node name="LowerLegRemoteR" type="RemoteTransform2D" parent="Skeleton2D/Hip/ThighR/LowerLegR"]
+remote_path = NodePath("../LowerLegSpriteR")
+update_rotation = false
+update_scale = false
+
+[node name="FootR" type="Bone2D" parent="Skeleton2D/Hip/ThighR/LowerLegR"]
+position = Vector2(0, 40)
+rest = Transform2D(1, 0, 0, 1, 0, 40)
+
+[node name="FootSpriteR" type="Polygon2D" parent="Skeleton2D/Hip/ThighR/LowerLegR/FootR"]
+color = Color(0.231373, 0.231373, 0.231373, 1)
+polygon = PackedVector2Array(-5, -3, 15, -3, 15, 5, -5, 5)
+
+[node name="FootRemoteR" type="RemoteTransform2D" parent="Skeleton2D/Hip/ThighR/LowerLegR/FootR"]
+remote_path = NodePath("../FootSpriteR")
+update_rotation = false
+update_scale = false
+
+[node name="Targets" type="Node2D" parent="."]
+
+[node name="ArmTargetL" type="Marker2D" parent="Targets"]
+position = Vector2(378, 292)
+
+[node name="ArmTargetR" type="Marker2D" parent="Targets"]
+position = Vector2(421, 285)
+
+[node name="LegTargetL" type="Marker2D" parent="Targets"]
+position = Vector2(386, 380)
+
+[node name="LegTargetR" type="Marker2D" parent="Targets"]
+position = Vector2(410, 380)
