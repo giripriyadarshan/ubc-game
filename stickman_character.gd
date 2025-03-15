@@ -47,7 +47,7 @@ func _physics_process(delta):
 		desired_direction = Input.get_axis("p1_left", "p1_right")
 	else:
 		desired_direction = Input.get_axis("p2_left", "p2_right")
-		
+
 	if walk_in_progress:
 		# Currently in a walk cycle
 		process_walk_cycle(delta)
@@ -60,9 +60,7 @@ func _physics_process(delta):
 			velocity.x = 0
 			if current_animation != "idle":
 				play_animation("idle")
-	
-	# Process arm controls
-	
+
 	# Apply movement
 	move_and_slide()
 
@@ -80,32 +78,34 @@ func start_walk_cycle(direction):
 	walk_start_position = global_position
 	walk_target_position = walk_start_position + Vector2(direction * WALK_DISTANCE, 0)
 	walk_progress = 0.0
-	
-	
-	# Start walk animation
-	play_animation("walk")
+
+	if (walk_direction > 0 and control_set == "player1") or (walk_direction<0 and control_set != "player1"):
+		play_animation("walk")
+	elif (walk_direction < 0 and control_set == "player1") or (walk_direction>0 and control_set != "player1"):
+		play_animation("walk_backwards")
+
 
 func process_walk_cycle(delta):
 	# Get animation length to calculate progress speed
 	var anim_length = animation_player.current_animation_length
-	
+
 	# Calculate how much to advance this frame
 	var progress_increment = delta / anim_length
 	walk_progress += progress_increment
-	
+
 	# Cap progress at 1.0 (should be handled by animation_finished but this is a safeguard)
 	walk_progress = min(walk_progress, 1.0)
-	
+
 	# Update position based on linear interpolation
 	global_position = walk_start_position.lerp(walk_target_position, walk_progress)
-	
+
 	# Set velocity to match the visual movement (for physics interactions)
 	velocity.x = walk_direction * WALK_DISTANCE / anim_length
-	
+
 func _on_animation_finished(anim_name):
-	if anim_name == "walk" and walk_in_progress:
+	if (anim_name == "walk" or anim_name == "walk_backwards") and walk_in_progress:
 		walk_in_progress = false
-		
+
 		# If player is still holding direction, start a new walk cycle
 		if desired_direction != 0:
 			# Start a new walk cycle
