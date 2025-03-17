@@ -3724,7 +3724,7 @@ polygon = PackedVector2Array(-15, -10, 15, -10, 15, 10, -15, 10)
 [node name="Torso" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip"]
 position = Vector2(0, -20)
 rotation = -0.181377
-scale = Vector2(0.999928, 0.999928)
+scale = Vector2(0.999909, 0.999909)
 rest = Transform2D(1, 0, 0, 1, 0, -20)
 
 [node name="TorsoSprite" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso"]
@@ -3735,7 +3735,7 @@ polygon = PackedVector2Array(-15, -30, 15, -30, 15, 30, -15, 30)
 [node name="Neck" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso"]
 position = Vector2(0, -60)
 rotation = 0.122044
-scale = Vector2(0.99997, 0.99997)
+scale = Vector2(0.999969, 0.999969)
 rest = Transform2D(1, 0, 0, 1, 0, -60)
 
 [node name="NeckSprite" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/Neck"]
@@ -3748,7 +3748,7 @@ rotation = -0.147952
 rest = Transform2D(1, 0, 0, 1, 0, -15)
 
 [node name="HeadSprite" type="Node2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/Neck/Head"]
-scale = Vector2(1.00012, 1.00012)
+scale = Vector2(1.00001, 1.00001)
 
 [node name="Circle" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/Neck/Head/HeadSprite"]
 color = Color(0.827451, 0.686275, 0.54902, 1)
@@ -3762,13 +3762,13 @@ update_scale = false
 [node name="ShoulderL" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso"]
 position = Vector2(-15, -55)
 rotation = -0.377157
-scale = Vector2(0.999953, 0.999953)
+scale = Vector2(0.999941, 0.999941)
 rest = Transform2D(0.896506, -0.442972, 0.442972, 0.896506, -15, -55)
 
 [node name="UpperArmL" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL"]
 position = Vector2(-9.99973, 0.000244141)
 rotation = -0.0697027
-scale = Vector2(0.999971, 0.999971)
+scale = Vector2(0.999959, 0.999959)
 rest = Transform2D(0.828198, 0.560436, -0.560436, 0.828198, -9.99973, 0.000244141)
 
 [node name="UpperArmSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL/UpperArmL"]
@@ -3785,11 +3785,11 @@ update_scale = false
 [node name="ForearmL" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL/UpperArmL"]
 position = Vector2(0.000366211, 30.0022)
 rotation = -0.901037
-scale = Vector2(0.999976, 0.999976)
+scale = Vector2(0.999963, 0.999963)
 rest = Transform2D(0.971996, -0.235, 0.235, 0.971996, 0.000366211, 30.0022)
 
 [node name="ForearmSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL"]
-scale = Vector2(0.994814, 0.994814)
+scale = Vector2(0.995109, 0.995109)
 color = Color(0.827451, 0.686275, 0.54902, 1)
 polygon = PackedVector2Array(-4, -5, 4, -5, 4, 25, -4, 25)
 
@@ -3803,8 +3803,8 @@ position = Vector2(0, 30)
 rest = Transform2D(1, 0, 0, 1, 0, 30)
 
 [node name="HandSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL/HandL"]
-rotation = 2.87468e-05
-scale = Vector2(0.99525, 0.99525)
+rotation = 2.91515e-05
+scale = Vector2(0.995874, 0.995874)
 color = Color(0.827451, 0.686275, 0.54902, 1)
 polygon = PackedVector2Array(-5, -3, 5, -3, 5, 7, -5, 7)
 
@@ -3816,18 +3816,18 @@ update_scale = false
 [node name="ShoulderR" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso"]
 position = Vector2(15, -55)
 rotation = -0.108746
-scale = Vector2(0.999962, 0.999962)
+scale = Vector2(0.999948, 0.999948)
 rest = Transform2D(0.997856, 0.0654391, -0.0654391, 0.997856, 15, -55)
 
 [node name="UpperArmR" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderR"]
 position = Vector2(10.0005, -0.00012207)
 rotation = -0.510447
-scale = Vector2(0.999942, 0.999942)
+scale = Vector2(0.999925, 0.999925)
 rest = Transform2D(1, 1.74846e-07, -1.74846e-07, 1, 10.0005, -0.00012207)
 
 [node name="UpperArmSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderR/UpperArmR"]
-rotation = 3.14539e-05
-scale = Vector2(1.00008, 1.00008)
+rotation = 3.25113e-05
+scale = Vector2(1.00009, 1.00009)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 offset = Vector2(-0.289734, -0.270401)
 polygon = PackedVector2Array(-5, -5, 5, -5, 5, 25, -5, 25)
@@ -3840,11 +3840,11 @@ update_scale = false
 [node name="ForearmR" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderR/UpperArmR"]
 position = Vector2(-6.10352e-05, 30.0001)
 rotation = -1.34565
-scale = Vector2(0.999957, 0.999957)
+scale = Vector2(0.999946, 0.999946)
 rest = Transform2D(1, 1.74845e-07, -1.74845e-07, 1, -6.10352e-05, 30.0001)
 
 [node name="ForearmSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderR/UpperArmR/ForearmR"]
-scale = Vector2(1.00091, 1.00059)
+scale = Vector2(1.00093, 1.00061)
 color = Color(0.827451, 0.686275, 0.54902, 1)
 polygon = PackedVector2Array(-4, -5, 4, -5, 4, 25, -4, 25)
 
@@ -3859,7 +3859,7 @@ rotation = 0.0699848
 rest = Transform2D(1, 0, 0, 1, 0, 30)
 
 [node name="HandSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderR/UpperArmR/ForearmR/HandR"]
-scale = Vector2(1.00091, 1.00091)
+scale = Vector2(1.00093, 1.00093)
 color = Color(0.827451, 0.686275, 0.54902, 1)
 polygon = PackedVector2Array(-5, -3, 5, -3, 5, 7, -5, 7)
 
@@ -3871,7 +3871,7 @@ update_scale = false
 [node name="ThighL" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip"]
 position = Vector2(-10, 0)
 rotation = 0.160089
-scale = Vector2(0.999958, 0.999958)
+scale = Vector2(0.999936, 0.999936)
 rest = Transform2D(0.998739, 0.0497265, -0.0497265, 0.998739, -10, 0)
 
 [node name="ThighSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighL"]
@@ -3887,12 +3887,12 @@ update_scale = false
 [node name="LowerLegL" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighL"]
 position = Vector2(-0.00765991, 40.0044)
 rotation = 0.213037
-scale = Vector2(0.999966, 0.999966)
+scale = Vector2(0.999953, 0.999953)
 rest = Transform2D(0.999976, 0.000229388, -0.000229388, 0.999976, -0.00765991, 40.0044)
 
 [node name="LowerLegSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighL/LowerLegL"]
-rotation = -8.5408e-05
-scale = Vector2(1.00146, 1.00146)
+rotation = -8.90111e-05
+scale = Vector2(1.00143, 1.00143)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 polygon = PackedVector2Array(-4, -5, 4, -5, 4, 35, -4, 35)
 
@@ -3907,8 +3907,8 @@ rotation = -0.289908
 rest = Transform2D(1, 0, 0, 1, 0, 40)
 
 [node name="FootSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighL/LowerLegL/FootL"]
-rotation = -5.80097e-05
-scale = Vector2(1.00142, 1.00142)
+rotation = -5.71639e-05
+scale = Vector2(1.00138, 1.00138)
 color = Color(0.231373, 0.231373, 0.231373, 1)
 polygon = PackedVector2Array(-5, -3, 15, -3, 15, 5, -5, 5)
 
@@ -3920,11 +3920,11 @@ update_scale = false
 [node name="ThighR" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip"]
 position = Vector2(10, 0)
 rotation = -0.148885
-scale = Vector2(0.999994, 0.999994)
+scale = Vector2(0.99998, 0.99998)
 rest = Transform2D(1, 0, 0, 1, 10, 0)
 
 [node name="ThighSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighR"]
-scale = Vector2(1.00041, 1.00041)
+scale = Vector2(1.00048, 1.00048)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 polygon = PackedVector2Array(-5, -5, 5, -5, 5, 35, -5, 35)
 
@@ -3936,11 +3936,12 @@ update_scale = false
 [node name="LowerLegR" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighR"]
 position = Vector2(0, 40)
 rotation = 0.153335
-scale = Vector2(0.999992, 0.999992)
+scale = Vector2(0.999974, 0.999974)
 rest = Transform2D(1, 0, 0, 1, 0, 40)
 
 [node name="LowerLegSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighR/LowerLegR"]
-scale = Vector2(0.998774, 0.998774)
+rotation = -1.27677e-05
+scale = Vector2(0.998382, 0.998382)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 polygon = PackedVector2Array(-4, -5, 4, -5, 4, 35, -4, 35)
 
@@ -3955,8 +3956,8 @@ rotation = 0.031145
 rest = Transform2D(1, 0, 0, 1, 0, 40)
 
 [node name="FootSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighR/LowerLegR/FootR"]
-rotation = -2.01286e-05
-scale = Vector2(0.99977, 0.99977)
+rotation = -2.02274e-05
+scale = Vector2(1.00004, 1.00004)
 color = Color(0.231373, 0.231373, 0.231373, 1)
 polygon = PackedVector2Array(-5, -3, 15, -3, 15, 5, -5, 5)
 
