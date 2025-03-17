@@ -12,7 +12,7 @@ var player_color: Color = Color(1, 1, 1, 1)
 
 # animation and movement state
 var current_animation: String = "idle"
-var walk_in_progress: bool       = false
+var walk_in_progress: bool    = false
 var walk_direction: int           = 0
 var walk_start_position: Vector2  = Vector2.ZERO
 var walk_target_position: Vector2 = Vector2.ZERO
