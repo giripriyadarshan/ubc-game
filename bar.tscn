@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://c0d6eii46lilc"]
+[gd_scene load_steps=7 format=3 uid="uid://c0d6eii46lilc"]
 
 [ext_resource type="Script" uid="uid://bxjuynu3s5b2" path="res://bar.gd" id="1_sbg6f"]
 [ext_resource type="Texture2D" uid="uid://86yq3ovleq4i" path="res://Assets/bar.jpg" id="2_sbg6f"]
+[ext_resource type="Script" uid="uid://b76xiyxnc0b55" path="res://camera.gd" id="3_a0eh7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nj6yy"]
 size = Vector2(1000, 20)
@@ -12,7 +13,7 @@ size = Vector2(400, 50)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xtgmr"]
 size = Vector2(20, 633)
 
-[node name="Bar" type="Node2D"]
+[node name="Bar" type="Node2D" groups=["Bar"]]
 script = ExtResource("1_sbg6f")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -72,3 +73,7 @@ shape = SubResource("RectangleShape2D_xtgmr")
 [node name="right_wall" type="CollisionShape2D" parent="walls"]
 position = Vector2(1003, 293)
 shape = SubResource("RectangleShape2D_xtgmr")
+
+[node name="Camera" type="Camera2D" parent="." groups=["Bar", "camera", "stickman", "stickman_character"]]
+position = Vector2(501, 298)
+script = ExtResource("3_a0eh7")

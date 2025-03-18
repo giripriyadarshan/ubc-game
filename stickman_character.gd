@@ -3,6 +3,16 @@ extends CharacterBody2D
 # Control configuration
 var control_set: String = "player1" # Can be "player1" or "player2"
 
+# Health and Endurance
+var current_health: int = 100
+var current_endurance: int = 100
+const MAX_HEALTH: int = 100
+const MAX_ENDURANCE: int = 100
+const MAX_ENDURANCE_SPENT: int = 50 # 25 for a regular punch, 50 for fist bump (simultaneaus punch)
+const MAX_DAMAGE_DEALT: int = 10
+const ENDURANCE_HEALING_RATE: int = 2 # per second
+
+
 # Movement parameters
 const WALK_DISTANCE: float = 50.0
 const SPEED: float         = 200.0
@@ -19,7 +29,12 @@ var walk_target_position: Vector2 = Vector2.ZERO
 var walk_progress: float          = 0.0
 var desired_direction: int        = 0
 @onready var animation_player = $AnimationPlayer
+@onready var hit_box = $hit_area
+@onready var camera = get_tree().get_first_node_in_group("camera")
 
+# set camera zoom and shake when punching using:
+# camera.set_zoom_str(1.01)
+# camera.set_shake_str(Vector2(4,4))
 
 func _ready():
 	# Set the animation
@@ -47,6 +62,9 @@ func _physics_process(delta):
 		desired_direction = Input.get_axis("p1_left", "p1_right")
 	else:
 		desired_direction = Input.get_axis("p2_left", "p2_right")
+	
+	if control_set != "player1":
+		hit_box.position.x = -132
 
 	if walk_in_progress:
 		# Currently in a walk cycle

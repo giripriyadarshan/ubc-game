@@ -3,3 +3,5 @@
 /android/
 /.idea
 /design_ideas
+*.tmp
+*.uid

@@ -39,10 +39,12 @@ func _setup_input_actions():
 	# Player 1 movement (WASD)
 	_add_key_action("p1_left", KEY_A)
 	_add_key_action("p1_right", KEY_D)
+	_add_key_action("p1_attack", KEY_W)
 
 	# Player 2 movement (Arrow keys)
 	_add_key_action("p2_left", KEY_LEFT)
 	_add_key_action("p2_right", KEY_RIGHT)
+	_add_key_action("p2_attack", KEY_UP)
 
 
 # Helper function to add key actions if they don't exist
