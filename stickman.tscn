@@ -3823,7 +3823,7 @@ scale = Vector2(0.999939, 0.999939)
 rest = Transform2D(0.828198, 0.560436, -0.560436, 0.828198, -9.99973, 0.000244141)
 
 [node name="UpperArmSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL/UpperArmL"]
-rotation = -1.22627e-05
+rotation = -1.22925e-05
 scale = Vector2(1.00129, 1.00129)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 offset = Vector2(0.478455, 2.61433)
@@ -3855,7 +3855,7 @@ position = Vector2(0, 30)
 rest = Transform2D(1, 0, 0, 1, 0, 30)
 
 [node name="HandSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL/HandL"]
-rotation = 3.02675e-05
+rotation = 3.02562e-05
 scale = Vector2(0.996571, 0.996571)
 color = Color(0.827451, 0.686275, 0.54902, 1)
 polygon = PackedVector2Array(-5, -3, 5, -3, 5, 7, -5, 7)
@@ -3878,7 +3878,7 @@ scale = Vector2(0.9999, 0.9999)
 rest = Transform2D(1, 1.74846e-07, -1.74846e-07, 1, 10.0005, -0.00012207)
 
 [node name="UpperArmSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderR/UpperArmR"]
-rotation = 2.96197e-05
+rotation = 2.96495e-05
 scale = Vector2(1.00013, 1.00013)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 offset = Vector2(-0.289734, -0.270401)
@@ -3943,7 +3943,7 @@ scale = Vector2(0.999925, 0.999925)
 rest = Transform2D(0.999976, 0.000229388, -0.000229388, 0.999976, -0.00765991, 40.0044)
 
 [node name="LowerLegSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighL/LowerLegL"]
-rotation = -8.94869e-05
+rotation = -8.95463e-05
 scale = Vector2(1.00144, 1.00144)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 polygon = PackedVector2Array(-4, -5, 4, -5, 4, 35, -4, 35)
@@ -3959,7 +3959,7 @@ rotation = -0.289908
 rest = Transform2D(1, 0, 0, 1, 0, 40)
 
 [node name="FootSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighL/LowerLegL/FootL"]
-rotation = -5.27108e-05
+rotation = -5.27109e-05
 scale = Vector2(1.00131, 1.00131)
 color = Color(0.231373, 0.231373, 0.231373, 1)
 polygon = PackedVector2Array(-5, -3, 15, -3, 15, 5, -5, 5)
@@ -3992,8 +3992,8 @@ scale = Vector2(0.999936, 0.999936)
 rest = Transform2D(1, 0, 0, 1, 0, 40)
 
 [node name="LowerLegSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighR/LowerLegR"]
-rotation = -1.67645e-05
-scale = Vector2(0.997679, 0.997679)
+rotation = -1.67142e-05
+scale = Vector2(0.995973, 0.995973)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 polygon = PackedVector2Array(-4, -5, 4, -5, 4, 35, -4, 35)
 
@@ -4008,7 +4008,7 @@ rotation = 0.031145
 rest = Transform2D(1, 0, 0, 1, 0, 40)
 
 [node name="FootSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighR/LowerLegR/FootR"]
-rotation = -1.7403e-05
+rotation = -1.73956e-05
 scale = Vector2(1.00052, 1.00052)
 color = Color(0.231373, 0.231373, 0.231373, 1)
 polygon = PackedVector2Array(-5, -3, 15, -3, 15, 5, -5, 5)
