@@ -17,7 +17,7 @@ const PUNCH_COOLDOWN: float = 0.5     # Time between punches
 
 # Movement parameters
 const WALK_DISTANCE: float = 50.0
-const SPEED: float         = 200.0
+const SPEED: float         = 100.0
 
 # Player information
 var player_color: Color = Color(1, 1, 1, 1)
@@ -87,7 +87,7 @@ func _physics_process(delta):
 		handle_punch_input(Input.is_action_just_pressed("p2_attack"))
 	
 	if control_set != "player1":
-		hit_box.position.x = -132
+		hit_box.scale.x = -1
 
 	if is_punching:
 		# Currently in punch animation - don't allow movement
@@ -141,7 +141,7 @@ func throw_punch():
 	play_animation("punch1")
 	
 	# Enable the knuckle hitbox during punch
-	$hit_area/knuckle_box.disabled = false
+	#$hit_area/knuckle_box.disabled = false
 	
 	# Add camera effects
 	camera.set_zoom_str(1.01)
@@ -204,7 +204,7 @@ func _on_hit_area_body_entered(body):
 	# Check if we hit the other player
 	if body is CharacterBody2D and body != self:
 		# Make sure we're in a punch animation and our knuckle box is enabled
-		if is_punching and !$hit_area/knuckle_box.disabled:
+		if is_punching:
 			# Calculate damage (could add random variation)
 			var damage = MAX_DAMAGE_DEALT
 			

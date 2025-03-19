@@ -23,8 +23,8 @@ offset_bottom = 600.0
 color = Color(0.12549, 0.12549, 0.12549, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(505.46, 204.5)
-scale = Vector2(0.621925, 0.618125)
+position = Vector2(521, 273.115)
+scale = Vector2(0.518555, 0.464956)
 texture = ExtResource("2_sbg6f")
 
 [node name="Floor" type="StaticBody2D" parent="."]

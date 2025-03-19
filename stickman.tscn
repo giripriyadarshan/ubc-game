@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cepdk35r5trb1"]
+[gd_scene load_steps=17 format=3 uid="uid://cepdk35r5trb1"]
 
 [ext_resource type="Script" uid="uid://jhxg7ra84f4l" path="res://stickman_character.gd" id="1_qlvw8"]
 
@@ -846,22 +846,10 @@ tracks/63/keys = {
 tracks/64/type = "value"
 tracks/64/imported = false
 tracks/64/enabled = true
-tracks/64/path = NodePath("hit_area/hit_box:disabled")
+tracks/64/path = NodePath("hit_area/knuckle_box:disabled")
 tracks/64/interp = 1
 tracks/64/loop_wrap = true
 tracks/64/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/65/type = "value"
-tracks/65/imported = false
-tracks/65/enabled = true
-tracks/65/path = NodePath("hit_area/knuckle_box:disabled")
-tracks/65/interp = 1
-tracks/65/loop_wrap = true
-tracks/65/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -2684,22 +2672,10 @@ tracks/55/keys = {
 tracks/56/type = "value"
 tracks/56/imported = false
 tracks/56/enabled = true
-tracks/56/path = NodePath("hit_area/hit_box:disabled")
+tracks/56/path = NodePath("hit_area/knuckle_box:disabled")
 tracks/56/interp = 1
 tracks/56/loop_wrap = true
 tracks/56/keys = {
-"times": PackedFloat32Array(0, 0.566667, 0.833333),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [true, false, true]
-}
-tracks/57/type = "value"
-tracks/57/imported = false
-tracks/57/enabled = true
-tracks/57/path = NodePath("hit_area/knuckle_box:disabled")
-tracks/57/interp = 1
-tracks/57/loop_wrap = true
-tracks/57/keys = {
 "times": PackedFloat32Array(0, 0.566667, 0.833333),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
@@ -3751,9 +3727,6 @@ _data = {
 &"walk_backwards": SubResource("Animation_ib2ok")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_iu0mg"]
-size = Vector2(98, 75)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xlwhs"]
 size = Vector2(20, 25)
 
@@ -3823,7 +3796,7 @@ scale = Vector2(0.999939, 0.999939)
 rest = Transform2D(0.828198, 0.560436, -0.560436, 0.828198, -9.99973, 0.000244141)
 
 [node name="UpperArmSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL/UpperArmL"]
-rotation = -1.22925e-05
+rotation = -1.19055e-05
 scale = Vector2(1.00129, 1.00129)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 offset = Vector2(0.478455, 2.61433)
@@ -3841,7 +3814,7 @@ scale = Vector2(0.999943, 0.999943)
 rest = Transform2D(0.971996, -0.235, 0.235, 0.971996, 0.000366211, 30.0022)
 
 [node name="ForearmSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL"]
-scale = Vector2(0.995377, 0.995377)
+scale = Vector2(0.995408, 0.995408)
 color = Color(0.827451, 0.686275, 0.54902, 1)
 polygon = PackedVector2Array(-4, -5, 4, -5, 4, 25, -4, 25)
 
@@ -3855,7 +3828,7 @@ position = Vector2(0, 30)
 rest = Transform2D(1, 0, 0, 1, 0, 30)
 
 [node name="HandSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/ForearmL/HandL"]
-rotation = 3.02562e-05
+rotation = 2.95797e-05
 scale = Vector2(0.996571, 0.996571)
 color = Color(0.827451, 0.686275, 0.54902, 1)
 polygon = PackedVector2Array(-5, -3, 5, -3, 5, 7, -5, 7)
@@ -3923,7 +3896,7 @@ update_scale = false
 [node name="ThighL" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip"]
 position = Vector2(-10, 0)
 rotation = 0.160089
-scale = Vector2(0.999907, 0.999907)
+scale = Vector2(0.999905, 0.999905)
 rest = Transform2D(0.998739, 0.0497265, -0.0497265, 0.998739, -10, 0)
 
 [node name="ThighSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighL"]
@@ -3943,7 +3916,7 @@ scale = Vector2(0.999925, 0.999925)
 rest = Transform2D(0.999976, 0.000229388, -0.000229388, 0.999976, -0.00765991, 40.0044)
 
 [node name="LowerLegSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighL/LowerLegL"]
-rotation = -8.95463e-05
+rotation = -8.95168e-05
 scale = Vector2(1.00144, 1.00144)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 polygon = PackedVector2Array(-4, -5, 4, -5, 4, 35, -4, 35)
@@ -3959,8 +3932,8 @@ rotation = -0.289908
 rest = Transform2D(1, 0, 0, 1, 0, 40)
 
 [node name="FootSpriteL" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighL/LowerLegL/FootL"]
-rotation = -5.27109e-05
-scale = Vector2(1.00131, 1.00131)
+rotation = -5.66492e-05
+scale = Vector2(1.00127, 1.00127)
 color = Color(0.231373, 0.231373, 0.231373, 1)
 polygon = PackedVector2Array(-5, -3, 15, -3, 15, 5, -5, 5)
 
@@ -3972,7 +3945,7 @@ update_scale = false
 [node name="ThighR" type="Bone2D" parent="CharacterBody2D/Skeleton2D/Hip"]
 position = Vector2(10, 0)
 rotation = -0.148885
-scale = Vector2(0.999948, 0.999948)
+scale = Vector2(0.999947, 0.999947)
 rest = Transform2D(1, 0, 0, 1, 10, 0)
 
 [node name="ThighSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighR"]
@@ -3992,8 +3965,8 @@ scale = Vector2(0.999936, 0.999936)
 rest = Transform2D(1, 0, 0, 1, 0, 40)
 
 [node name="LowerLegSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighR/LowerLegR"]
-rotation = -1.67142e-05
-scale = Vector2(0.995973, 0.995973)
+rotation = -1.66095e-05
+scale = Vector2(0.996002, 0.996002)
 color = Color(0.356863, 0.356863, 0.356863, 1)
 polygon = PackedVector2Array(-4, -5, 4, -5, 4, 35, -4, 35)
 
@@ -4008,8 +3981,8 @@ rotation = 0.031145
 rest = Transform2D(1, 0, 0, 1, 0, 40)
 
 [node name="FootSpriteR" type="Polygon2D" parent="CharacterBody2D/Skeleton2D/Hip/ThighR/LowerLegR/FootR"]
-rotation = -1.73956e-05
-scale = Vector2(1.00052, 1.00052)
+rotation = -1.73667e-05
+scale = Vector2(1.00046, 1.00046)
 color = Color(0.231373, 0.231373, 0.231373, 1)
 polygon = PackedVector2Array(-5, -3, 15, -3, 15, 5, -5, 5)
 
@@ -4042,13 +4015,8 @@ libraries = {
 }
 
 [node name="hit_area" type="Area2D" parent="CharacterBody2D"]
-position = Vector2(107, -91)
-
-[node name="hit_box" type="CollisionShape2D" parent="CharacterBody2D/hit_area"]
-position = Vector2(11.5, 5.5)
-shape = SubResource("RectangleShape2D_iu0mg")
 
 [node name="knuckle_box" type="CollisionShape2D" parent="CharacterBody2D/hit_area"]
-position = Vector2(3, 26.5)
+position = Vector2(107, -69)
 shape = SubResource("RectangleShape2D_xlwhs")
 disabled = true
