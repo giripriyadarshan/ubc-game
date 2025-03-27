@@ -349,7 +349,7 @@ func check_simultaneous_punch(delta):
 					print("Both players punching simultaneously! Triggering fist bump!")
 					
 					# Check if both have enough endurance
-					if player1.current_endurance >= player1.SIMULTANEOUS_PUNCH_COST and player2.current_endurance >= player2.SIMULTANEOUS_PUNCH_COST:
+					if player1.current_endurance >= player1.SIMULTANEOUS_PUNCH_COST or player2.current_endurance >= player2.SIMULTANEOUS_PUNCH_COST or player1.current_endurance < player1.SIMULTANEOUS_PUNCH_COST or player2.current_endurance < player2.SIMULTANEOUS_PUNCH_COST:
 						
 						# Trigger special animation on both
 						var success1 = player1.start_simultaneous_punch()

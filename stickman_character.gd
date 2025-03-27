@@ -260,7 +260,7 @@ func try_start_simultaneous_punch():
 	print("[", control_set, "] Fist collision detected! Attempting simultaneous punch!")
 	
 	# Check if both have enough endurance
-	if current_endurance >= SIMULTANEOUS_PUNCH_COST and opponent.current_endurance >= SIMULTANEOUS_PUNCH_COST:
+	if current_endurance >= SIMULTANEOUS_PUNCH_COST or opponent.current_endurance >= SIMULTANEOUS_PUNCH_COST or current_endurance < SIMULTANEOUS_PUNCH_COST or opponent.current_endurance < SIMULTANEOUS_PUNCH_COST:
 		var success1 = start_simultaneous_punch()
 		var success2 = opponent.start_simultaneous_punch()
 		
@@ -274,10 +274,6 @@ func try_start_simultaneous_punch():
 	return false
 
 func start_simultaneous_punch():
-	# First check if we have enough endurance
-	if current_endurance < SIMULTANEOUS_PUNCH_COST:
-		print("[", control_set, "] Not enough endurance for simultaneous punch!")
-		return false
 		
 	# Set state for simultaneous punch
 	is_in_simultaneous_punch = true
