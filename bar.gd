@@ -208,11 +208,13 @@ func _setup_input_actions():
 	_add_key_action("p1_left", KEY_A)
 	_add_key_action("p1_right", KEY_D)
 	_add_key_action("p1_attack", KEY_W)
+	_add_key_action("p1_block", KEY_S)  # Added block action for player 1
 
 	# Player 2 movement (Arrow keys)
 	_add_key_action("p2_left", KEY_LEFT)
 	_add_key_action("p2_right", KEY_RIGHT)
 	_add_key_action("p2_attack", KEY_UP)
+	_add_key_action("p2_block", KEY_DOWN)  # Added block action for player 2
 
 # Helper function to add key actions if they don't exist
 func _add_key_action(action_name, key_scancode):

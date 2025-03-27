@@ -14,7 +14,12 @@ const MIN_DAMAGE_DEALT: int = 1     # Minimum damage when endurance is 0
 const ENDURANCE_HEALING_RATE: float = 2.0  # Increased for testing (normally 2.0)
 const PUNCH_ENDURANCE_COST: int = 25  # Cost to throw a punch
 const PUNCH_COOLDOWN: float = 0.5     # Time between punches
-const KNOCKBACK_DISTANCE: float = 30.0  # Distance to move back when hit
+
+# Block-related constants
+const BLOCK_ENDURANCE_COST: int = 15  # Cost when hit while blocking
+const BLOCK_ATTACKER_ENDURANCE_COST: int = 10  # Cost to the attacker hitting a block
+const BLOCK_COOLDOWN: float = 0.2  # Short cooldown before blocking again
+const KNOCKBACK_DISTANCE: float = 20.0  # Distance to push back when hit
 
 # Debug variables
 var debug_timer: float = 0.0
@@ -37,9 +42,19 @@ var walk_progress: float = 0.0
 var desired_direction: int = 0
 var can_punch: bool = true
 var is_punching: bool = false
-var is_knocked_back: bool = false  # New variable to track knockback state
 var punch_timer: float = 0.0
 var stagger_timer: float = 0.0
+# New blocking variables
+var is_blocking: bool = false
+var can_block: bool = true
+var block_timer: float = 0.0
+# Knockback variables
+var is_knocked_back: bool = false
+var knockback_direction: int = 0
+var knockback_start_position: Vector2 = Vector2.ZERO
+var knockback_target_position: Vector2 = Vector2.ZERO
+var knockback_progress: float = 0.0
+
 @onready var animation_player = $AnimationPlayer
 @onready var hit_box = $hit_area
 @onready var camera = get_tree().get_first_node_in_group("camera")
@@ -92,27 +107,41 @@ func _physics_process(delta):
 		if punch_timer <= 0:
 			can_punch = true
 	
+	if !can_block:
+		block_timer -= delta
+		if block_timer <= 0:
+			can_block = true
+			
 	if stagger_timer > 0:
 		stagger_timer -= delta
 		return  # Can't do anything while staggered
 		
 	# Process inputs based on control set
+	var block_input = false
 	if control_set == "player1":
 		desired_direction = Input.get_axis("p1_left", "p1_right")
 		handle_punch_input(Input.is_action_just_pressed("p1_attack"))
+		block_input = Input.is_action_pressed("p1_block")
 	else:
 		desired_direction = Input.get_axis("p2_left", "p2_right")
 		handle_punch_input(Input.is_action_just_pressed("p2_attack"))
+		block_input = Input.is_action_pressed("p2_block")
+	
+	# Handle blocking
+	handle_block_input(block_input)
 	
 	if control_set != "player1":
 		hit_box.scale.x = -1
 
-	if is_punching:
+	if is_knocked_back:
+		# Process knockback
+		process_knockback(delta)
+	elif is_punching:
 		# Currently in punch animation - don't allow movement
 		velocity.x = 0
-	elif is_knocked_back:
-		# Currently in knockback - process the knockback movement
-		process_walk_cycle(delta)
+	elif is_blocking:
+		# Can't move while blocking
+		velocity.x = 0
 	elif walk_in_progress:
 		# Currently in a walk cycle
 		process_walk_cycle(delta)
@@ -123,15 +152,40 @@ func _physics_process(delta):
 		else:
 			# Idle state - no horizontal velocity
 			velocity.x = 0
-			if current_animation != "idle" and !is_punching:
+			if current_animation != "idle" and !is_punching and !is_blocking:
 				play_animation("idle")
 
 	# Apply movement
 	move_and_slide()
 
 func handle_punch_input(is_punch_pressed):
-	if is_punch_pressed and can_punch and !is_punching and !walk_in_progress and !is_knocked_back:
+	if is_punch_pressed and can_punch and !is_punching and !walk_in_progress and !is_blocking and !is_knocked_back:
 		throw_punch()
+
+func handle_block_input(is_block_pressed):
+	if is_block_pressed and can_block and !is_punching and !walk_in_progress and !is_knocked_back:
+		if !is_blocking:
+			start_blocking()
+	elif is_blocking:  # If we were blocking but now released the button
+		stop_blocking()
+
+func start_blocking():
+	# Begin blocking stance
+	is_blocking = true
+	play_animation("block")
+	
+	print("[", control_set, "] Blocking started!")
+
+func stop_blocking():
+	# End blocking stance
+	is_blocking = false
+	can_block = false
+	block_timer = BLOCK_COOLDOWN
+	
+	if current_animation == "block":
+		play_animation("idle")
+	
+	print("[", control_set, "] Blocking stopped!")
 
 func play_animation(anim_name):
 	animation_player.play(anim_name)
@@ -177,9 +231,76 @@ func throw_punch():
 	var effect_magnitude = max(0.2, float(current_endurance) / MAX_ENDURANCE)
 	camera.set_zoom_str(1.0 + (0.01 * effect_magnitude))
 	camera.set_shake_str(Vector2(2, 2) * effect_magnitude)
+
+func start_knockback(direction):
+	# Set knockback parameters
+	is_knocked_back = true
+	knockback_direction = direction
+	knockback_start_position = global_position
+	# Determine knockback direction based on control set and direction
+	var actual_direction = knockback_direction
+	if control_set != "player1":
+		actual_direction = -knockback_direction
+		
+	knockback_target_position = knockback_start_position + Vector2(actual_direction * KNOCKBACK_DISTANCE, 0)
+	knockback_progress = 0.0
 	
-func take_damage(damage_amount):
-	# Apply damage to health
+	# Play stagger animation
+	play_animation("stagger")
+	
+func process_knockback(delta):
+	# Use a fixed time for the knockback (0.3 seconds)
+	var knockback_time = 0.3
+	
+	# Calculate how much to advance this frame
+	var progress_increment = delta / knockback_time
+	knockback_progress += progress_increment
+	
+	# Cap progress at 1.0
+	knockback_progress = min(knockback_progress, 1.0)
+	
+	# Update position based on linear interpolation
+	global_position = knockback_start_position.lerp(knockback_target_position, knockback_progress)
+	
+	# Set velocity to match the visual movement (for physics interactions)
+	velocity.x = knockback_direction * KNOCKBACK_DISTANCE / knockback_time
+	
+	# End knockback when complete
+	if knockback_progress >= 1.0:
+		is_knocked_back = false
+		
+func take_damage(damage_amount, attacker_position):
+	# Determine knockback direction based on attacker position
+	var knockback_dir = 1
+	if attacker_position.x < global_position.x:
+		knockback_dir = 1  # Knock to the right
+	else:
+		knockback_dir = -1  # Knock to the left
+		
+	# If blocking, prevent damage but consume endurance
+	if is_blocking:
+		print("[", control_set, "] Blocked attack! No damage taken.")
+		
+		# Reduce endurance from blocking the hit
+		var endurance_before = current_endurance
+		if current_endurance >= BLOCK_ENDURANCE_COST:
+			current_endurance -= BLOCK_ENDURANCE_COST
+		else:
+			current_endurance = 0
+			stop_blocking()  # Can't block without endurance
+			
+		print("[", control_set, "] Block endurance cost: ", endurance_before, " -> ", current_endurance)
+		
+		# Camera effects for block impact - less than taking damage
+		camera.set_zoom_str(1.01)
+		camera.set_shake_str(Vector2(2, 2))
+		
+		# Still apply knockback and animation when blocking
+		start_knockback(knockback_dir)
+		
+		return
+	
+	# Apply damage to health if not blocking
 	var health_before = current_health
 	current_health = max(0, current_health - damage_amount)
 	
@@ -188,30 +309,12 @@ func take_damage(damage_amount):
 	# Visual feedback
 	stagger_timer = 0.3  # Brief stagger effect
 	
-	# Determine knockback direction based on control set
-	# For player1, getting hit means moving left (negative direction)
-	# For player2, getting hit means moving right (positive direction)
-	var knockback_direction = -1 if control_set == "player1" else 1
-	
-	# Start the knockback movement
-	walk_in_progress = false  # Cancel any ongoing walk
-	is_knocked_back = true
-	walk_direction = knockback_direction
-	walk_start_position = global_position
-	walk_target_position = walk_start_position + Vector2(knockback_direction * KNOCKBACK_DISTANCE, 0)
-	walk_progress = 0.0
-	
-	# Play damage_received animation
-	# Note: You'll need to add this animation to your AnimationPlayer
-	if animation_player.has_animation("damage_received"):
-		play_animation("damage_received")
-	else:
-		# Fallback to stagger if animation doesn't exist
-		play_animation("stagger") 
-	
 	# Camera effects for hit impact
 	camera.set_zoom_str(1.03)
 	camera.set_shake_str(Vector2(4, 4))
+	
+	# Apply knockback
+	start_knockback(knockback_dir)
 	
 	# Check if knocked out
 	if current_health <= 0:
@@ -243,9 +346,12 @@ func _on_animation_finished(anim_name):
 		is_punching = false
 		$hit_area/knuckle_box.disabled = true
 		play_animation("idle")
-	elif anim_name == "stagger" or anim_name == "damage_received":
-		is_knocked_back = false  # End knockback state
+	elif anim_name == "stagger":
 		play_animation("idle")
+	elif anim_name == "block":
+		# The block animation continues looping as long as the button is held
+		if is_blocking:
+			play_animation("block")  # Replay the animation to continue blocking
 
 func _on_hit_area_body_entered(body):
 	# Check if we hit the other player
@@ -262,8 +368,18 @@ func _on_hit_area_body_entered(body):
 			
 			print("[", control_set, "] Hit landed! Dealing ", damage, " damage to opponent")
 			
-			# Apply damage to the other fighter
-			body.take_damage(damage)
+			# Apply damage to the other fighter - pass our position for knockback direction
+			body.take_damage(damage, global_position)
+			
+			# If opponent is blocking, attacker also loses some endurance from hitting the block
+			if body.is_blocking:
+				var attacker_endurance_before = current_endurance
+				if current_endurance >= BLOCK_ATTACKER_ENDURANCE_COST:
+					current_endurance -= BLOCK_ATTACKER_ENDURANCE_COST
+				else:
+					current_endurance = 0
+					
+				print("[", control_set, "] Hit a block! Endurance penalty: ", attacker_endurance_before, " -> ", current_endurance)
 			
 			# Disable knuckle box to prevent multiple hits
 			$hit_area/knuckle_box.disabled = true
