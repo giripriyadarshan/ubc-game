@@ -109,7 +109,7 @@ func setup_ui():
 	p1_container.add_child(p1_header)
 
 	player1_health_label = Label.new()
-	player1_health_label.text = "HEALTH: 100%"
+	player1_health_label.text = "HEALTH"  # Removed percentage display
 	p1_container.add_child(player1_health_label)
 
 	player1_health_bar = ProgressBar.new()
@@ -148,7 +148,7 @@ func setup_ui():
 	p2_container.add_child(p2_header)
 
 	player2_health_label = Label.new()
-	player2_health_label.text = "HEALTH: 100%"
+	player2_health_label.text = "HEALTH"  # Removed percentage display
 	p2_container.add_child(player2_health_label)
 
 	player2_health_bar = ProgressBar.new()
@@ -254,7 +254,7 @@ func _process(delta):
 	# Update Player 1 UI
 	if player1:
 		player1_health_bar.value = player1.current_health
-		player1_health_label.text = "HEALTH: " + str(int(player1.current_health)) + "%"
+		# Removed numerical health display
 
 		player1_endurance_bar.value = player1.current_endurance
 
@@ -273,7 +273,7 @@ func _process(delta):
 	# Update Player 2 UI
 	if player2:
 		player2_health_bar.value = player2.current_health
-		player2_health_label.text = "HEALTH: " + str(int(player2.current_health)) + "%"
+		# Removed numerical health display
 
 		player2_endurance_bar.value = player2.current_endurance
 

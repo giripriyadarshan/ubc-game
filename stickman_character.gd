@@ -9,8 +9,8 @@ var current_endurance: float = 100.0  # Changed to float for smoother healing
 const MAX_HEALTH: int = 100
 const MAX_ENDURANCE: int = 100
 const MAX_ENDURANCE_SPENT: int = 50 # 25 for a regular punch, 50 for fist bump (simultaneaus punch)
-const MAX_DAMAGE_DEALT: int = 25
-const MIN_DAMAGE_DEALT: int = 1     # Minimum damage when endurance is 0
+const MAX_DAMAGE_DEALT: int = 40    # Increased from 25 to 40 for more impact
+const MIN_DAMAGE_DEALT: int = 5     # Increased minimum damage from 1 to 5
 const ENDURANCE_HEALING_RATE: float = 2.0  # Increased for testing (normally 2.0)
 const PUNCH_ENDURANCE_COST: int = 25  # Cost for successful punch
 const PUNCH_COOLDOWN: float = 0.5     # Time between punches
@@ -475,15 +475,19 @@ func _on_hit_area_body_entered(body):
 				
 			print("[", control_set, "] Punch hit! Endurance cost: ", endurance_before, " -> ", current_endurance)
 			
-			# Calculate damage based on current endurance
-			var damage_percent = float(current_endurance) / MAX_ENDURANCE
+			# Calculate damage based on current endurance - enhanced formula
+			# Use a more exponential curve to reward high endurance
+			var damage_percent = pow(float(current_endurance) / MAX_ENDURANCE, 1.5)
 			
 			# At 0 endurance = MIN_DAMAGE, at full endurance = MAX_DAMAGE
 			var damage = MIN_DAMAGE_DEALT
 			if current_endurance > 0:
 				damage = int(MIN_DAMAGE_DEALT + damage_percent * (MAX_DAMAGE_DEALT - MIN_DAMAGE_DEALT))
+				
+			# Ensure damage doesn't exceed maximum
+			damage = min(damage, MAX_DAMAGE_DEALT)
 			
-			print("[", control_set, "] Hit landed! Dealing ", damage, " damage to opponent")
+			print("[", control_set, "] Hit landed! Dealing ", damage, " damage with ", current_endurance, " endurance (", int(damage_percent * 100), "% power)")
 			
 			# Apply damage to the other fighter - pass our position for knockback direction
 			body.take_damage(damage, global_position)
@@ -501,6 +505,6 @@ func _on_hit_area_body_entered(body):
 			# Disable knuckle box to prevent multiple hits
 			$hit_area/knuckle_box.disabled = true
 			
-			# Add extra camera shake on impact
+			# Add extra camera shake on impact based on damage
 			var impact_strength = float(damage) / MAX_DAMAGE_DEALT
 			camera.set_shake_str(Vector2(5, 5) * impact_strength)
