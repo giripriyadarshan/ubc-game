@@ -14,6 +14,7 @@ const MIN_DAMAGE_DEALT: int = 1     # Minimum damage when endurance is 0
 const ENDURANCE_HEALING_RATE: float = 2.0  # Increased for testing (normally 2.0)
 const PUNCH_ENDURANCE_COST: int = 25  # Cost to throw a punch
 const PUNCH_COOLDOWN: float = 0.5     # Time between punches
+const SIMULTANEOUS_PUNCH_COST: int = 40  # Cost for simultaneous punch (higher than regular punch)
 
 # Block-related constants
 const BLOCK_ENDURANCE_COST: int = 15  # Cost when hit while blocking
@@ -54,9 +55,17 @@ var knockback_direction: int = 0
 var knockback_start_position: Vector2 = Vector2.ZERO
 var knockback_target_position: Vector2 = Vector2.ZERO
 var knockback_progress: float = 0.0
+# Simultaneous punch variables
+var is_in_simultaneous_punch: bool = false
+var wants_to_punch: bool = false  # Tracks if player just pressed the punch button
+# Fist collision
+var detected_fist_collision: bool = false
+# Reference to opponent
+var opponent: CharacterBody2D = null
 
 @onready var animation_player = $AnimationPlayer
 @onready var hit_box = $hit_area
+@onready var knuckle_box = $hit_area/knuckle_box
 @onready var camera = get_tree().get_first_node_in_group("camera")
 
 func _ready():
@@ -67,8 +76,11 @@ func _ready():
 	# Apply color to all body parts
 	apply_player_color(player_color)
 	
+	# Setup collision detection
 	$hit_area/knuckle_box.disabled = true
 	$hit_area.body_entered.connect(_on_hit_area_body_entered)
+	# Add area_entered connection for knuckle box collision
+	$hit_area.area_entered.connect(_on_hit_area_area_entered)
 	
 	print("[", control_set, "] Character ready with endurance: ", current_endurance)
 
@@ -115,16 +127,25 @@ func _physics_process(delta):
 	if stagger_timer > 0:
 		stagger_timer -= delta
 		return  # Can't do anything while staggered
+	
+	# If in a simultaneous punch, don't process regular inputs
+	if is_in_simultaneous_punch:
+		velocity.x = 0
+		return
 		
 	# Process inputs based on control set
 	var block_input = false
+	wants_to_punch = false  # Reset at the start of each frame
+	
 	if control_set == "player1":
 		desired_direction = Input.get_axis("p1_left", "p1_right")
-		handle_punch_input(Input.is_action_just_pressed("p1_attack"))
+		wants_to_punch = Input.is_action_just_pressed("p1_attack")
+		handle_punch_input(wants_to_punch)
 		block_input = Input.is_action_pressed("p1_block")
 	else:
 		desired_direction = Input.get_axis("p2_left", "p2_right")
-		handle_punch_input(Input.is_action_just_pressed("p2_attack"))
+		wants_to_punch = Input.is_action_just_pressed("p2_attack")
+		handle_punch_input(wants_to_punch)
 		block_input = Input.is_action_pressed("p2_block")
 	
 	# Handle blocking
@@ -139,6 +160,13 @@ func _physics_process(delta):
 	elif is_punching:
 		# Currently in punch animation - don't allow movement
 		velocity.x = 0
+		
+		# Check for fist collision when both players are punching
+		if detected_fist_collision and opponent and opponent.is_punching:
+			# Both players are punching and a fist collision was detected
+			detected_fist_collision = false  # Reset flag
+			try_start_simultaneous_punch()
+			
 	elif is_blocking:
 		# Can't move while blocking
 		velocity.x = 0
@@ -163,7 +191,7 @@ func handle_punch_input(is_punch_pressed):
 		throw_punch()
 
 func handle_block_input(is_block_pressed):
-	if is_block_pressed and can_block and !is_punching and !walk_in_progress and !is_knocked_back:
+	if is_block_pressed and can_block and !is_punching and !walk_in_progress and !is_knocked_back and !is_in_simultaneous_punch:
 		if !is_blocking:
 			start_blocking()
 	elif is_blocking:  # If we were blocking but now released the button
@@ -210,18 +238,75 @@ func throw_punch():
 	can_punch = false
 	punch_timer = PUNCH_COOLDOWN
 	
-	# No longer deduct endurance here - we'll deduct it only when a hit lands
-	
 	# Play punch animation
 	play_animation("punch1")
 	
 	# Enable the knuckle hitbox during punch
 	$hit_area/knuckle_box.disabled = false
 	
+	# Reset fist collision detection
+	detected_fist_collision = false
+	
 	# Add camera effects
 	var effect_magnitude = max(0.2, float(current_endurance) / MAX_ENDURANCE)
 	camera.set_zoom_str(1.0 + (0.01 * effect_magnitude))
 	camera.set_shake_str(Vector2(2, 2) * effect_magnitude)
+
+func try_start_simultaneous_punch():
+	# Check if both players can perform simultaneous punch
+	if is_in_simultaneous_punch or !opponent or opponent.is_in_simultaneous_punch:
+		return false
+		
+	print("[", control_set, "] Fist collision detected! Attempting simultaneous punch!")
+	
+	# Check if both have enough endurance
+	if current_endurance >= SIMULTANEOUS_PUNCH_COST and opponent.current_endurance >= SIMULTANEOUS_PUNCH_COST:
+		var success1 = start_simultaneous_punch()
+		var success2 = opponent.start_simultaneous_punch()
+		
+		if success1 and success2:
+			# Add special camera effect
+			camera.set_zoom_str(1.1)  # Dramatic zoom
+			camera.set_shake_str(Vector2(8, 8))  # Strong shake
+			print("Simultaneous punch animation started from fist collision!")
+			return true
+	
+	return false
+
+func start_simultaneous_punch():
+	# First check if we have enough endurance
+	if current_endurance < SIMULTANEOUS_PUNCH_COST:
+		print("[", control_set, "] Not enough endurance for simultaneous punch!")
+		return false
+		
+	# Set state for simultaneous punch
+	is_in_simultaneous_punch = true
+	is_punching = false  # Reset regular punch state
+	
+	# Deduct endurance
+	var endurance_before = current_endurance
+	current_endurance = max(0, current_endurance - SIMULTANEOUS_PUNCH_COST)
+	print("[", control_set, "] Simultaneous punch! Endurance: ", endurance_before, " -> ", current_endurance)
+	
+	# Play the special animation
+	play_animation("simultaneous_punch")
+	
+	# Disable hitbox
+	$hit_area/knuckle_box.disabled = true
+	
+	# Add special camera effects
+	camera.set_zoom_str(1.05)  # More dramatic zoom for the special move
+	camera.set_shake_str(Vector2(4, 4))  # More dramatic shake
+	
+	return true
+
+func end_simultaneous_punch():
+	is_in_simultaneous_punch = false
+	can_punch = false  # Brief cooldown after the special move
+	punch_timer = PUNCH_COOLDOWN * 2  # Longer cooldown for special move
+	
+	play_animation("idle")
+	print("[", control_set, "] Simultaneous punch ended!")
 
 func start_knockback(direction):
 	# Set knockback parameters
@@ -229,7 +314,6 @@ func start_knockback(direction):
 	knockback_direction = direction
 	knockback_start_position = global_position
 	
-	# FIXED: Always apply knockback in the correct visual direction without negation
 	# The direction passed should already account for relative positions
 	knockback_target_position = knockback_start_position + Vector2(direction * KNOCKBACK_DISTANCE, 0)
 	knockback_progress = 0.0
@@ -259,8 +343,11 @@ func process_knockback(delta):
 		is_knocked_back = false
 		
 func take_damage(damage_amount, attacker_position):
+	# Skip damage if in simultaneous punch animation
+	if is_in_simultaneous_punch:
+		return
+		
 	# Determine knockback direction based on attacker position
-	# FIXED: Make sure knockback is always away from the attacker
 	var knockback_dir = 0
 	if attacker_position.x < global_position.x:
 		knockback_dir = 1  # Knock to the right
@@ -344,8 +431,35 @@ func _on_animation_finished(anim_name):
 		# The block animation continues looping as long as the button is held
 		if is_blocking:
 			play_animation("block")  # Replay the animation to continue blocking
+	elif anim_name == "simultaneous_punch":
+		# End simultaneous punch state
+		end_simultaneous_punch()
+
+# Called when another area enters the hit_area
+func _on_hit_area_area_entered(area):
+	# Skip if in simultaneous punch or not punching
+	if is_in_simultaneous_punch or !is_punching:
+		return
+		
+	# Check if this is a hit_area from another player
+	if area is Area2D and area.get_parent() != self and area.get_parent() is CharacterBody2D:
+		var other_player = area.get_parent()
+		
+		# Check if this is the opponent's hit_area
+		if other_player == opponent and opponent.is_punching:
+			# Detect collision between active knuckle boxes
+			if !$hit_area/knuckle_box.disabled and !opponent.get_node("hit_area/knuckle_box").disabled:
+				print("[", control_set, "] KNUCKLE BOX COLLISION DETECTED!")
+				detected_fist_collision = true
+				
+				# Try to start simultaneous punch immediately
+				try_start_simultaneous_punch()
 
 func _on_hit_area_body_entered(body):
+	# Skip hit detection if in simultaneous punch
+	if is_in_simultaneous_punch:
+		return
+		
 	# Check if we hit the other player
 	if body is CharacterBody2D and body != self:
 		# Make sure we're in a punch animation and our knuckle box is enabled

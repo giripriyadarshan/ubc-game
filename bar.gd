@@ -16,6 +16,11 @@ var player2_health_bar: ProgressBar
 var player2_endurance_bar: ProgressBar
 var player2_health_label: Label
 
+# Fist bump detection variables
+var can_check_simultaneous: bool = true
+var simultaneous_cooldown: float = 0.5
+var simultaneous_timer: float = 0.0
+
 func _ready():
 	# Setup input actions first
 	_setup_input_actions()
@@ -44,6 +49,16 @@ func _ready():
 	player2_instance.get_node("CharacterBody2D").player_color = Color(0.2, 0.2, 0.8)  # Blue
 	player2_instance.get_node("CharacterBody2D/Skeleton2D").scale.x = -1
 	player2 = player2_instance.get_node("CharacterBody2D")
+	
+	# Set opponent references for each player
+	player1.opponent = player2
+	player2.opponent = player1
+	
+	# Make sure both hit_areas can detect each other
+	player1.get_node("hit_area").set_collision_layer_value(2, true)
+	player1.get_node("hit_area").set_collision_mask_value(2, true)
+	player2.get_node("hit_area").set_collision_layer_value(2, true)
+	player2.get_node("hit_area").set_collision_mask_value(2, true)
 
 	var animation_player: Node = player2_instance.get_node("CharacterBody2D/AnimationPlayer")
 	animation_player.play("idle")
@@ -108,8 +123,6 @@ func setup_ui():
 	player1_endurance_bar.modulate = Color(0.2, 0.7, 0.9)
 	p1_container.add_child(player1_endurance_bar)
 
-	# Note: Punch power label removed
-
 	# Spacer
 	var spacer = Control.new()
 	spacer.custom_minimum_size = Vector2(100, 0)
@@ -149,12 +162,13 @@ func setup_ui():
 	player2_endurance_bar.modulate = Color(0.2, 0.7, 0.9)
 	p2_container.add_child(player2_endurance_bar)
 
-	# Note: Punch power label removed
-
 	print("UI setup complete")
 
 # Update UI every frame
-func _process(_delta):
+func _process(delta):
+	# Check for simultaneous punch opportunity
+	check_simultaneous_punch(delta)
+	
 	# Update Player 1 UI
 	if player1:
 		player1_health_bar.value = player1.current_health
@@ -193,6 +207,47 @@ func _process(_delta):
 		else:
 			player2_endurance_bar.modulate = Color(0.2, 0.7, 0.9)  # Normal blue
 
+func check_simultaneous_punch(delta):
+	# If we're in cooldown, decrement the timer
+	if !can_check_simultaneous:
+		simultaneous_timer -= delta
+		if simultaneous_timer <= 0:
+			can_check_simultaneous = true
+			return
+			
+	# Only check if both players can still take action (not already in a special move)
+	if can_check_simultaneous and player1 and player2:
+		if !player1.is_in_simultaneous_punch and !player2.is_in_simultaneous_punch:
+			# Check if both players want to punch at the same time and are close enough to each other
+			if player1.wants_to_punch and player2.wants_to_punch:
+				# Calculate distance between players
+				var distance = abs(player1.global_position.x - player2.global_position.x)
+				
+				# If they're within punching range (adjust distance as needed)
+				if distance < 100:
+					print("Both players punching simultaneously! Triggering fist bump!")
+					
+					# Check if both have enough endurance
+					if player1.current_endurance >= player1.SIMULTANEOUS_PUNCH_COST and player2.current_endurance >= player2.SIMULTANEOUS_PUNCH_COST:
+						
+						# Trigger special animation on both
+						var success1 = player1.start_simultaneous_punch()
+						var success2 = player2.start_simultaneous_punch()
+						
+						if success1 and success2:
+							print("Simultaneous punch animation started!")
+							# Special camera effect
+							var camera = get_tree().get_first_node_in_group("camera")
+							if camera:
+								camera.set_zoom_str(1.1)  # Dramatic zoom for special move
+								camera.set_shake_str(Vector2(8, 8))  # Strong shake
+							
+							# Set cooldown to prevent immediate re-triggering
+							can_check_simultaneous = false
+							simultaneous_timer = simultaneous_cooldown
+						else:
+							print("Failed to start simultaneous punch - not enough endurance!")
+
 func calculate_damage(player):
 	var min_damage = 1
 	var max_damage = 10
@@ -208,13 +263,13 @@ func _setup_input_actions():
 	_add_key_action("p1_left", KEY_A)
 	_add_key_action("p1_right", KEY_D)
 	_add_key_action("p1_attack", KEY_W)
-	_add_key_action("p1_block", KEY_S)  # Added block action for player 1
+	_add_key_action("p1_block", KEY_S)  # 's' for player 1 block
 
 	# Player 2 movement (Arrow keys)
 	_add_key_action("p2_left", KEY_LEFT)
 	_add_key_action("p2_right", KEY_RIGHT)
 	_add_key_action("p2_attack", KEY_UP)
-	_add_key_action("p2_block", KEY_DOWN)  # Added block action for player 2
+	_add_key_action("p2_block", KEY_DOWN)  # down arrow for player 2 block
 
 # Helper function to add key actions if they don't exist
 func _add_key_action(action_name, key_scancode):
