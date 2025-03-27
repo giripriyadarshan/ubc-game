@@ -20,8 +20,8 @@ var debug_timer: float = 0.0
 const DEBUG_INTERVAL: float = 1.0  # Print debug info every second
 
 # Movement parameters
-const WALK_DISTANCE: float = 50.0
-const SPEED: float = 100.0
+const WALK_DISTANCE: float = 30.0
+#const SPEED: float = 100.0
 
 # Player information
 var player_color: Color = Color(1, 1, 1, 1)
