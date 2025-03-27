@@ -210,16 +210,7 @@ func throw_punch():
 	can_punch = false
 	punch_timer = PUNCH_COOLDOWN
 	
-	# Store endurance before punch
-	var endurance_before = current_endurance
-	
-	# Deduct endurance but don't go below 0
-	if current_endurance >= PUNCH_ENDURANCE_COST:
-		current_endurance -= PUNCH_ENDURANCE_COST
-	else:
-		current_endurance = 0
-	
-	print("[", control_set, "] Punch! Endurance: ", endurance_before, " -> ", current_endurance)
+	# No longer deduct endurance here - we'll deduct it only when a hit lands
 	
 	# Play punch animation
 	play_animation("punch1")
@@ -237,12 +228,10 @@ func start_knockback(direction):
 	is_knocked_back = true
 	knockback_direction = direction
 	knockback_start_position = global_position
-	# Determine knockback direction based on control set and direction
-	var actual_direction = knockback_direction
-	if control_set != "player1":
-		actual_direction = -knockback_direction
-		
-	knockback_target_position = knockback_start_position + Vector2(actual_direction * KNOCKBACK_DISTANCE, 0)
+	
+	# FIXED: Always apply knockback in the correct visual direction without negation
+	# The direction passed should already account for relative positions
+	knockback_target_position = knockback_start_position + Vector2(direction * KNOCKBACK_DISTANCE, 0)
 	knockback_progress = 0.0
 	
 	# Play stagger animation
@@ -271,11 +260,14 @@ func process_knockback(delta):
 		
 func take_damage(damage_amount, attacker_position):
 	# Determine knockback direction based on attacker position
-	var knockback_dir = 1
+	# FIXED: Make sure knockback is always away from the attacker
+	var knockback_dir = 0
 	if attacker_position.x < global_position.x:
 		knockback_dir = 1  # Knock to the right
 	else:
 		knockback_dir = -1  # Knock to the left
+	
+	print("[", control_set, "] Knocked back with direction: ", knockback_dir)
 		
 	# If blocking, prevent damage but consume endurance
 	if is_blocking:
@@ -358,6 +350,17 @@ func _on_hit_area_body_entered(body):
 	if body is CharacterBody2D and body != self:
 		# Make sure we're in a punch animation and our knuckle box is enabled
 		if is_punching and !$hit_area/knuckle_box.disabled:
+			# NOW we deduct endurance for a successful hit
+			var endurance_before = current_endurance
+			
+			# Deduct endurance but don't go below 0
+			if current_endurance >= PUNCH_ENDURANCE_COST:
+				current_endurance -= PUNCH_ENDURANCE_COST
+			else:
+				current_endurance = 0
+				
+			print("[", control_set, "] Punch hit! Endurance cost: ", endurance_before, " -> ", current_endurance)
+			
 			# Calculate damage based on current endurance
 			var damage_percent = float(current_endurance) / MAX_ENDURANCE
 			
@@ -373,13 +376,13 @@ func _on_hit_area_body_entered(body):
 			
 			# If opponent is blocking, attacker also loses some endurance from hitting the block
 			if body.is_blocking:
-				var attacker_endurance_before = current_endurance
+				endurance_before = current_endurance
 				if current_endurance >= BLOCK_ATTACKER_ENDURANCE_COST:
 					current_endurance -= BLOCK_ATTACKER_ENDURANCE_COST
 				else:
 					current_endurance = 0
 					
-				print("[", control_set, "] Hit a block! Endurance penalty: ", attacker_endurance_before, " -> ", current_endurance)
+				print("[", control_set, "] Hit a block! Extra endurance penalty: ", endurance_before, " -> ", current_endurance)
 			
 			# Disable knuckle box to prevent multiple hits
 			$hit_area/knuckle_box.disabled = true
