@@ -14,6 +14,7 @@ const MIN_DAMAGE_DEALT: int = 1     # Minimum damage when endurance is 0
 const ENDURANCE_HEALING_RATE: float = 2.0  # Increased for testing (normally 2.0)
 const PUNCH_ENDURANCE_COST: int = 25  # Cost to throw a punch
 const PUNCH_COOLDOWN: float = 0.5     # Time between punches
+const KNOCKBACK_DISTANCE: float = 30.0  # Distance to move back when hit
 
 # Debug variables
 var debug_timer: float = 0.0
@@ -36,6 +37,7 @@ var walk_progress: float = 0.0
 var desired_direction: int = 0
 var can_punch: bool = true
 var is_punching: bool = false
+var is_knocked_back: bool = false  # New variable to track knockback state
 var punch_timer: float = 0.0
 var stagger_timer: float = 0.0
 @onready var animation_player = $AnimationPlayer
@@ -108,6 +110,9 @@ func _physics_process(delta):
 	if is_punching:
 		# Currently in punch animation - don't allow movement
 		velocity.x = 0
+	elif is_knocked_back:
+		# Currently in knockback - process the knockback movement
+		process_walk_cycle(delta)
 	elif walk_in_progress:
 		# Currently in a walk cycle
 		process_walk_cycle(delta)
@@ -125,7 +130,7 @@ func _physics_process(delta):
 	move_and_slide()
 
 func handle_punch_input(is_punch_pressed):
-	if is_punch_pressed and can_punch and !is_punching and !walk_in_progress:
+	if is_punch_pressed and can_punch and !is_punching and !walk_in_progress and !is_knocked_back:
 		throw_punch()
 
 func play_animation(anim_name):
@@ -183,6 +188,27 @@ func take_damage(damage_amount):
 	# Visual feedback
 	stagger_timer = 0.3  # Brief stagger effect
 	
+	# Determine knockback direction based on control set
+	# For player1, getting hit means moving left (negative direction)
+	# For player2, getting hit means moving right (positive direction)
+	var knockback_direction = -1 if control_set == "player1" else 1
+	
+	# Start the knockback movement
+	walk_in_progress = false  # Cancel any ongoing walk
+	is_knocked_back = true
+	walk_direction = knockback_direction
+	walk_start_position = global_position
+	walk_target_position = walk_start_position + Vector2(knockback_direction * KNOCKBACK_DISTANCE, 0)
+	walk_progress = 0.0
+	
+	# Play damage_received animation
+	# Note: You'll need to add this animation to your AnimationPlayer
+	if animation_player.has_animation("damage_received"):
+		play_animation("damage_received")
+	else:
+		# Fallback to stagger if animation doesn't exist
+		play_animation("stagger") 
+	
 	# Camera effects for hit impact
 	camera.set_zoom_str(1.03)
 	camera.set_shake_str(Vector2(4, 4))
@@ -217,7 +243,8 @@ func _on_animation_finished(anim_name):
 		is_punching = false
 		$hit_area/knuckle_box.disabled = true
 		play_animation("idle")
-	elif anim_name == "stagger":
+	elif anim_name == "stagger" or anim_name == "damage_received":
+		is_knocked_back = false  # End knockback state
 		play_animation("idle")
 
 func _on_hit_area_body_entered(body):
