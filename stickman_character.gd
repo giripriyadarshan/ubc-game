@@ -12,9 +12,9 @@ const MAX_ENDURANCE_SPENT: int = 50 # 25 for a regular punch, 50 for fist bump (
 const MAX_DAMAGE_DEALT: int = 25
 const MIN_DAMAGE_DEALT: int = 1     # Minimum damage when endurance is 0
 const ENDURANCE_HEALING_RATE: float = 2.0  # Increased for testing (normally 2.0)
-const PUNCH_ENDURANCE_COST: int = 25  # Cost to throw a punch
+const PUNCH_ENDURANCE_COST: int = 25  # Cost for successful punch
 const PUNCH_COOLDOWN: float = 0.5     # Time between punches
-const SIMULTANEOUS_PUNCH_COST: int = 40  # Cost for simultaneous punch (higher than regular punch)
+const SIMULTANEOUS_PUNCH_COST: int = 50  # Cost for simultaneous punch (updated to 50)
 
 # Block-related constants
 const BLOCK_ENDURANCE_COST: int = 15  # Cost when hit while blocking
@@ -283,7 +283,7 @@ func start_simultaneous_punch():
 	is_in_simultaneous_punch = true
 	is_punching = false  # Reset regular punch state
 	
-	# Deduct endurance
+	# Deduct endurance - now using exactly 50 points
 	var endurance_before = current_endurance
 	current_endurance = max(0, current_endurance - SIMULTANEOUS_PUNCH_COST)
 	print("[", control_set, "] Simultaneous punch! Endurance: ", endurance_before, " -> ", current_endurance)
@@ -360,7 +360,7 @@ func take_damage(damage_amount, attacker_position):
 	if is_blocking:
 		print("[", control_set, "] Blocked attack! No damage taken.")
 		
-		# Reduce endurance from blocking the hit
+		# Reduce endurance from blocking the hit (15 points)
 		var endurance_before = current_endurance
 		if current_endurance >= BLOCK_ENDURANCE_COST:
 			current_endurance -= BLOCK_ENDURANCE_COST
@@ -464,7 +464,7 @@ func _on_hit_area_body_entered(body):
 	if body is CharacterBody2D and body != self:
 		# Make sure we're in a punch animation and our knuckle box is enabled
 		if is_punching and !$hit_area/knuckle_box.disabled:
-			# NOW we deduct endurance for a successful hit
+			# NOW we deduct endurance for a successful hit (25 points)
 			var endurance_before = current_endurance
 			
 			# Deduct endurance but don't go below 0
@@ -488,7 +488,7 @@ func _on_hit_area_body_entered(body):
 			# Apply damage to the other fighter - pass our position for knockback direction
 			body.take_damage(damage, global_position)
 			
-			# If opponent is blocking, attacker also loses some endurance from hitting the block
+			# If opponent is blocking, attacker also loses some endurance from hitting the block (10 points)
 			if body.is_blocking:
 				endurance_before = current_endurance
 				if current_endurance >= BLOCK_ATTACKER_ENDURANCE_COST:
