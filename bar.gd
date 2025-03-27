@@ -21,6 +21,12 @@ var can_check_simultaneous: bool = true
 var simultaneous_cooldown: float = 0.5
 var simultaneous_timer: float = 0.0
 
+# Game over variables
+var game_over: bool = false
+var game_over_panel: Panel
+var winner_label: Label
+var restart_button: Button
+
 func _ready():
 	# Setup input actions first
 	_setup_input_actions()
@@ -66,6 +72,9 @@ func _ready():
 
 	# Create UI 
 	setup_ui()
+
+	# Setup game over UI (but don't show it yet)
+	setup_game_over_ui()
 
 	print("Bar scene ready with players and UI")
 
@@ -164,8 +173,81 @@ func setup_ui():
 
 	print("UI setup complete")
 
+func setup_game_over_ui():
+	# Create a CanvasLayer for game over UI (higher layer to appear on top)
+	var canvas = CanvasLayer.new()
+	canvas.layer = 10  # Higher layer
+	add_child(canvas)
+	
+	# Game over panel
+	game_over_panel = Panel.new()
+	game_over_panel.set_anchors_preset(Control.PRESET_CENTER)
+	game_over_panel.custom_minimum_size = Vector2(400, 250)
+	game_over_panel.visible = false  # Hidden by default
+	canvas.add_child(game_over_panel)
+	
+	# Center the panel
+	game_over_panel.position = Vector2(
+		(get_viewport_rect().size.x - game_over_panel.custom_minimum_size.x) / 2,
+		(get_viewport_rect().size.y - game_over_panel.custom_minimum_size.y) / 2
+	)
+	
+	# Container for content
+	var vbox = VBoxContainer.new()
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.add_theme_constant_override("separation", 20)
+	game_over_panel.add_child(vbox)
+	
+	# Add some margin
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 20)
+	margin.add_theme_constant_override("margin_top", 20)
+	margin.add_theme_constant_override("margin_right", 20)
+	margin.add_theme_constant_override("margin_bottom", 20)
+	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.add_child(margin)
+	
+	var inner_vbox = VBoxContainer.new()
+	inner_vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	inner_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	inner_vbox.add_theme_constant_override("separation", 20)
+	margin.add_child(inner_vbox)
+	
+	# Game over label
+	var game_over_label = Label.new()
+	game_over_label.text = "GAME OVER"
+	game_over_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	game_over_label.add_theme_font_size_override("font_size", 32)
+	inner_vbox.add_child(game_over_label)
+	
+	# Winner label
+	winner_label = Label.new()
+	winner_label.text = "PLAYER X WINS!"
+	winner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	winner_label.add_theme_font_size_override("font_size", 24)
+	inner_vbox.add_child(winner_label)
+	
+	# Restart button
+	restart_button = Button.new()
+	restart_button.text = "RESTART MATCH"
+	restart_button.custom_minimum_size = Vector2(200, 50)
+	restart_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	inner_vbox.add_child(restart_button)
+	
+	# Connect button signals
+	restart_button.pressed.connect(_on_restart_button_pressed)
+	
+	print("Game over UI setup complete")
+
 # Update UI every frame
 func _process(delta):
+	# If game is already over, don't process anything else
+	if game_over:
+		return
+		
+	# Check for game over condition
+	check_game_over()
+	
 	# Check for simultaneous punch opportunity
 	check_simultaneous_punch(delta)
 	
@@ -206,6 +288,45 @@ func _process(delta):
 			player2_endurance_bar.modulate = Color(0.2, 0.7, 0.9, 0.5)  # Dim blue for low endurance
 		else:
 			player2_endurance_bar.modulate = Color(0.2, 0.7, 0.9)  # Normal blue
+
+func check_game_over():
+	# Check if either player's health has reached 0
+	if player1 and player1.current_health <= 0:
+		show_game_over("PLAYER 2")
+	elif player2 and player2.current_health <= 0:
+		show_game_over("PLAYER 1")
+
+func show_game_over(winner_name):
+	# Set game over state
+	game_over = true
+	
+	# Update winner text
+	winner_label.text = winner_name + " WINS!"
+	
+	# Apply color to winner text based on player
+	if winner_name == "PLAYER 1":
+		winner_label.add_theme_color_override("font_color", Color(0.2, 0.8, 0.2))  # Green
+	else:
+		winner_label.add_theme_color_override("font_color", Color(0.2, 0.2, 0.8))  # Blue
+	
+	# Show the game over panel
+	game_over_panel.visible = true
+	
+	# Apply dramatic camera effect
+	var camera = get_tree().get_first_node_in_group("camera")
+	if camera:
+		camera.set_zoom_str(1.2)  # Dramatic zoom
+		camera.set_shake_str(Vector2(10, 10))  # Strong shake
+	
+	print("Game over! " + winner_name + " wins!")
+	
+	# Disable player controls
+	player1.set_process_input(false)
+	player2.set_process_input(false)
+
+func _on_restart_button_pressed():
+	# Reload the current scene to restart the game
+	get_tree().reload_current_scene()
 
 func check_simultaneous_punch(delta):
 	# If we're in cooldown, decrement the timer
