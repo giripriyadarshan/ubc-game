@@ -76,8 +76,6 @@ func _ready():
 	# Setup game over UI (but don't show it yet)
 	setup_game_over_ui()
 
-	print("Bar scene ready with players and UI")
-
 func setup_ui():
 	# Create a CanvasLayer for UI
 	var canvas = CanvasLayer.new()
@@ -171,7 +169,6 @@ func setup_ui():
 	player2_endurance_bar.modulate = Color(0.2, 0.7, 0.9)
 	p2_container.add_child(player2_endurance_bar)
 
-	print("UI setup complete")
 
 func setup_game_over_ui():
 	# Create a CanvasLayer for game over UI (higher layer to appear on top)
@@ -237,10 +234,9 @@ func setup_game_over_ui():
 	# Connect button signals
 	restart_button.pressed.connect(_on_restart_button_pressed)
 	
-	print("Game over UI setup complete")
 
 # Update UI every frame
-func _process(delta):
+func _process(delta) -> void:
 	# If game is already over, don't process anything else
 	if game_over:
 		return
@@ -313,12 +309,11 @@ func show_game_over(winner_name):
 	game_over_panel.visible = true
 	
 	# Apply dramatic camera effect
-	var camera = get_tree().get_first_node_in_group("camera")
+	var camera: Node = get_tree().get_first_node_in_group("camera")
 	if camera:
 		camera.set_zoom_str(1.2)  # Dramatic zoom
 		camera.set_shake_str(Vector2(10, 10))  # Strong shake
 	
-	print("Game over! " + winner_name + " wins!")
 	
 	# Disable player controls
 	player1.set_process_input(false)
@@ -328,7 +323,7 @@ func _on_restart_button_pressed():
 	# Reload the current scene to restart the game
 	get_tree().reload_current_scene()
 
-func check_simultaneous_punch(delta):
+func check_simultaneous_punch(delta) -> void:
 	# If we're in cooldown, decrement the timer
 	if !can_check_simultaneous:
 		simultaneous_timer -= delta
@@ -346,7 +341,6 @@ func check_simultaneous_punch(delta):
 				
 				# If they're within punching range (adjust distance as needed)
 				if distance < 100:
-					print("Both players punching simultaneously! Triggering fist bump!")
 					
 					# Check if both have enough endurance
 					if player1.current_endurance >= player1.SIMULTANEOUS_PUNCH_COST or player2.current_endurance >= player2.SIMULTANEOUS_PUNCH_COST or player1.current_endurance < player1.SIMULTANEOUS_PUNCH_COST or player2.current_endurance < player2.SIMULTANEOUS_PUNCH_COST:
@@ -356,9 +350,8 @@ func check_simultaneous_punch(delta):
 						var success2 = player2.start_simultaneous_punch()
 						
 						if success1 and success2:
-							print("Simultaneous punch animation started!")
 							# Special camera effect
-							var camera = get_tree().get_first_node_in_group("camera")
+							var camera: Node = get_tree().get_first_node_in_group("camera")
 							if camera:
 								camera.set_zoom_str(1.1)  # Dramatic zoom for special move
 								camera.set_shake_str(Vector2(8, 8))  # Strong shake
@@ -366,12 +359,10 @@ func check_simultaneous_punch(delta):
 							# Set cooldown to prevent immediate re-triggering
 							can_check_simultaneous = false
 							simultaneous_timer = simultaneous_cooldown
-						else:
-							print("Failed to start simultaneous punch - not enough endurance!")
 
-func calculate_damage(player):
-	var min_damage = 1
-	var max_damage = 10
+func calculate_damage(player) -> int:
+	var min_damage: int = 1
+	var max_damage: int = 10
 
 	if player.current_endurance <= 0:
 		return min_damage

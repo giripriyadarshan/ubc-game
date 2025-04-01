@@ -1,34 +1,29 @@
 extends CharacterBody2D
 
 # Control configuration
-var control_set: String = "player1" # Can be "player1" or "player2"
+var control_set: String = "player1" 			# Can be "player1" or "player2"
 
 # Health and Endurance
 var current_health: int = 100
-var current_endurance: float = 100.0  # Changed to float for smoother healing
+var current_endurance: float = 100.0
 const MAX_HEALTH: int = 100
 const MAX_ENDURANCE: int = 100
-const MAX_ENDURANCE_SPENT: int = 50 # 25 for a regular punch, 50 for fist bump (simultaneaus punch)
-const MAX_DAMAGE_DEALT: int = 40    # Increased from 25 to 40 for more impact
-const MIN_DAMAGE_DEALT: int = 5     # Increased minimum damage from 1 to 5
-const ENDURANCE_HEALING_RATE: float = 2.0  # Increased for testing (normally 2.0)
-const PUNCH_ENDURANCE_COST: int = 25  # Cost for successful punch
-const PUNCH_COOLDOWN: float = 0.5     # Time between punches
-const SIMULTANEOUS_PUNCH_COST: int = 50  # Cost for simultaneous punch (updated to 50)
+const MAX_ENDURANCE_SPENT: int = 50
+const MAX_DAMAGE_DEALT: int = 40
+const MIN_DAMAGE_DEALT: int = 5
+const ENDURANCE_HEALING_RATE: float = 2.0
+const PUNCH_ENDURANCE_COST: int = 25
+const PUNCH_COOLDOWN: float = 0.5     			# Time between punches
+const SIMULTANEOUS_PUNCH_COST: int = 50
 
 # Block-related constants
-const BLOCK_ENDURANCE_COST: int = 15  # Cost when hit while blocking
-const BLOCK_ATTACKER_ENDURANCE_COST: int = 10  # Cost to the attacker hitting a block
-const BLOCK_COOLDOWN: float = 0.2  # Short cooldown before blocking again
-const KNOCKBACK_DISTANCE: float = 20.0  # Distance to push back when hit
-
-# Debug variables
-var debug_timer: float = 0.0
-const DEBUG_INTERVAL: float = 1.0  # Print debug info every second
+const BLOCK_ENDURANCE_COST: int = 15
+const BLOCK_ATTACKER_ENDURANCE_COST: int = 10
+const BLOCK_COOLDOWN: float = 0.2				# Short cooldown before blocking again
+const KNOCKBACK_DISTANCE: float = 20.0			# Distance to push back when hit
 
 # Movement parameters
 const WALK_DISTANCE: float = 30.0
-#const SPEED: float = 100.0
 
 # Player information
 var player_color: Color = Color(1, 1, 1, 1)
@@ -45,7 +40,7 @@ var can_punch: bool = true
 var is_punching: bool = false
 var punch_timer: float = 0.0
 var stagger_timer: float = 0.0
-# New blocking variables
+# blocking variables
 var is_blocking: bool = false
 var can_block: bool = true
 var block_timer: float = 0.0
@@ -66,7 +61,7 @@ var opponent: CharacterBody2D = null
 @onready var animation_player = $AnimationPlayer
 @onready var hit_box = $hit_area
 @onready var knuckle_box = $hit_area/knuckle_box
-@onready var camera = get_tree().get_first_node_in_group("camera")
+@onready var camera: Node = get_tree().get_first_node_in_group("camera")
 
 func _ready():
 	# Set the animation
@@ -82,7 +77,6 @@ func _ready():
 	# Add area_entered connection for knuckle box collision
 	$hit_area.area_entered.connect(_on_hit_area_area_entered)
 	
-	print("[", control_set, "] Character ready with endurance: ", current_endurance)
 
 func apply_player_color(color):
 	# Apply color to torso and limbs
@@ -94,25 +88,11 @@ func apply_player_color(color):
 	$Skeleton2D/Hip/Torso/ShoulderL/UpperArmL/UpperArmSpriteL.color = color
 	$Skeleton2D/Hip/Torso/ShoulderR/UpperArmR/UpperArmSpriteR.color = color
 
-func _process(delta):
-	# Debug endurance healing with timer
-	debug_timer += delta
-	if debug_timer >= DEBUG_INTERVAL:
-		debug_timer = 0.0
-		print("[", control_set, "] Current endurance: ", current_endurance)
-
-func _physics_process(delta):
-	# Regenerate endurance at fixed rate
-	# Store the value before healing to debug the change
-	var previous_endurance = current_endurance
+func _physics_process(delta) -> void:
 	
 	if current_endurance < MAX_ENDURANCE:
 		var healing_amount = ENDURANCE_HEALING_RATE * delta
 		current_endurance = min(current_endurance + healing_amount, MAX_ENDURANCE)
-		
-		# Debug significant changes
-		if abs(current_endurance - previous_endurance) > 0.1:
-			print("[", control_set, "] Endurance healing: ", previous_endurance, " -> ", current_endurance)
 		
 	if !can_punch:
 		punch_timer -= delta
@@ -126,7 +106,7 @@ func _physics_process(delta):
 			
 	if stagger_timer > 0:
 		stagger_timer -= delta
-		return  # Can't do anything while staggered
+		return
 	
 	# If in a simultaneous punch, don't process regular inputs
 	if is_in_simultaneous_punch:
@@ -134,7 +114,7 @@ func _physics_process(delta):
 		return
 		
 	# Process inputs based on control set
-	var block_input = false
+	var block_input: bool = false
 	wants_to_punch = false  # Reset at the start of each frame
 	
 	if control_set == "player1":
@@ -201,8 +181,6 @@ func start_blocking():
 	# Begin blocking stance
 	is_blocking = true
 	play_animation("block")
-	
-	print("[", control_set, "] Blocking started!")
 
 func stop_blocking():
 	# End blocking stance
@@ -213,7 +191,6 @@ func stop_blocking():
 	if current_animation == "block":
 		play_animation("idle")
 	
-	print("[", control_set, "] Blocking stopped!")
 
 func play_animation(anim_name):
 	animation_player.play(anim_name)
@@ -252,37 +229,34 @@ func throw_punch():
 	camera.set_zoom_str(1.0 + (0.01 * effect_magnitude))
 	camera.set_shake_str(Vector2(2, 2) * effect_magnitude)
 
-func try_start_simultaneous_punch():
+func try_start_simultaneous_punch() -> bool:
 	# Check if both players can perform simultaneous punch
 	if is_in_simultaneous_punch or !opponent or opponent.is_in_simultaneous_punch:
 		return false
 		
-	print("[", control_set, "] Fist collision detected! Attempting simultaneous punch!")
 	
 	# Check if both have enough endurance
 	if current_endurance >= SIMULTANEOUS_PUNCH_COST or opponent.current_endurance >= SIMULTANEOUS_PUNCH_COST or current_endurance < SIMULTANEOUS_PUNCH_COST or opponent.current_endurance < SIMULTANEOUS_PUNCH_COST:
-		var success1 = start_simultaneous_punch()
-		var success2 = opponent.start_simultaneous_punch()
+		var success1: bool = start_simultaneous_punch()
+		var success2       = opponent.start_simultaneous_punch()
 		
 		if success1 and success2:
 			# Add special camera effect
 			camera.set_zoom_str(1.1)  # Dramatic zoom
 			camera.set_shake_str(Vector2(8, 8))  # Strong shake
-			print("Simultaneous punch animation started from fist collision!")
 			return true
 	
 	return false
 
-func start_simultaneous_punch():
+func start_simultaneous_punch() -> bool:
 		
 	# Set state for simultaneous punch
 	is_in_simultaneous_punch = true
 	is_punching = false  # Reset regular punch state
 	
 	# Deduct endurance - now using exactly 50 points
-	var endurance_before = current_endurance
+	var endurance_before: float = current_endurance
 	current_endurance = max(0, current_endurance - SIMULTANEOUS_PUNCH_COST)
-	print("[", control_set, "] Simultaneous punch! Endurance: ", endurance_before, " -> ", current_endurance)
 	
 	# Play the special animation
 	play_animation("simultaneous_punch")
@@ -302,7 +276,6 @@ func end_simultaneous_punch():
 	punch_timer = PUNCH_COOLDOWN * 2  # Longer cooldown for special move
 	
 	play_animation("idle")
-	print("[", control_set, "] Simultaneous punch ended!")
 
 func start_knockback(direction):
 	# Set knockback parameters
@@ -319,7 +292,7 @@ func start_knockback(direction):
 	
 func process_knockback(delta):
 	# Use a fixed time for the knockback (0.3 seconds)
-	var knockback_time = 0.3
+	var knockback_time: float = 0.3
 	
 	# Calculate how much to advance this frame
 	var progress_increment = delta / knockback_time
@@ -338,33 +311,30 @@ func process_knockback(delta):
 	if knockback_progress >= 1.0:
 		is_knocked_back = false
 		
-func take_damage(damage_amount, attacker_position):
+# The editor says this is unused, but it's used
+func take_damage(damage_amount, attacker_position) -> void:
 	# Skip damage if in simultaneous punch animation
 	if is_in_simultaneous_punch:
 		return
 		
 	# Determine knockback direction based on attacker position
-	var knockback_dir = 0
+	var knockback_dir: int = 0
 	if attacker_position.x < global_position.x:
 		knockback_dir = 1  # Knock to the right
 	else:
 		knockback_dir = -1  # Knock to the left
-	
-	print("[", control_set, "] Knocked back with direction: ", knockback_dir)
 		
 	# If blocking, prevent damage but consume endurance
 	if is_blocking:
-		print("[", control_set, "] Blocked attack! No damage taken.")
 		
 		# Reduce endurance from blocking the hit (15 points)
-		var endurance_before = current_endurance
+		var endurance_before: float = current_endurance
 		if current_endurance >= BLOCK_ENDURANCE_COST:
 			current_endurance -= BLOCK_ENDURANCE_COST
 		else:
 			current_endurance = 0
 			stop_blocking()  # Can't block without endurance
 			
-		print("[", control_set, "] Block endurance cost: ", endurance_before, " -> ", current_endurance)
 		
 		# Camera effects for block impact - less than taking damage
 		camera.set_zoom_str(1.01)
@@ -376,10 +346,8 @@ func take_damage(damage_amount, attacker_position):
 		return
 	
 	# Apply damage to health if not blocking
-	var health_before = current_health
+	var health_before: int = current_health
 	current_health = max(0, current_health - damage_amount)
-	
-	print("[", control_set, "] Took damage: Health ", health_before, " -> ", current_health)
 	
 	# Visual feedback
 	stagger_timer = 0.3  # Brief stagger effect
@@ -391,9 +359,6 @@ func take_damage(damage_amount, attacker_position):
 	# Apply knockback
 	start_knockback(knockback_dir)
 	
-	# Check if knocked out
-	if current_health <= 0:
-		print("[", control_set, "] Knocked out!")
 
 func process_walk_cycle(delta):
 	# Get animation length to calculate progress speed
@@ -432,26 +397,25 @@ func _on_animation_finished(anim_name):
 		end_simultaneous_punch()
 
 # Called when another area enters the hit_area
-func _on_hit_area_area_entered(area):
+func _on_hit_area_area_entered(area) -> void:
 	# Skip if in simultaneous punch or not punching
 	if is_in_simultaneous_punch or !is_punching:
 		return
 		
 	# Check if this is a hit_area from another player
 	if area is Area2D and area.get_parent() != self and area.get_parent() is CharacterBody2D:
-		var other_player = area.get_parent()
+		var other_player: Node = area.get_parent()
 		
 		# Check if this is the opponent's hit_area
 		if other_player == opponent and opponent.is_punching:
 			# Detect collision between active knuckle boxes
 			if !$hit_area/knuckle_box.disabled and !opponent.get_node("hit_area/knuckle_box").disabled:
-				print("[", control_set, "] KNUCKLE BOX COLLISION DETECTED!")
 				detected_fist_collision = true
 				
 				# Try to start simultaneous punch immediately
 				try_start_simultaneous_punch()
 
-func _on_hit_area_body_entered(body):
+func _on_hit_area_body_entered(body) -> void:
 	# Skip hit detection if in simultaneous punch
 	if is_in_simultaneous_punch:
 		return
@@ -461,29 +425,25 @@ func _on_hit_area_body_entered(body):
 		# Make sure we're in a punch animation and our knuckle box is enabled
 		if is_punching and !$hit_area/knuckle_box.disabled:
 			# NOW we deduct endurance for a successful hit (25 points)
-			var endurance_before = current_endurance
+			var endurance_before: float = current_endurance
 			
 			# Deduct endurance but don't go below 0
 			if current_endurance >= PUNCH_ENDURANCE_COST:
 				current_endurance -= PUNCH_ENDURANCE_COST
 			else:
 				current_endurance = 0
-				
-			print("[", control_set, "] Punch hit! Endurance cost: ", endurance_before, " -> ", current_endurance)
 			
 			# Calculate damage based on current endurance - enhanced formula
 			# Use a more exponential curve to reward high endurance
-			var damage_percent = pow(float(current_endurance) / MAX_ENDURANCE, 1.5)
+			var damage_percent: float = pow(float(current_endurance) / MAX_ENDURANCE, 1.5)
 			
 			# At 0 endurance = MIN_DAMAGE, at full endurance = MAX_DAMAGE
-			var damage = MIN_DAMAGE_DEALT
+			var damage: int = MIN_DAMAGE_DEALT
 			if current_endurance > 0:
 				damage = int(MIN_DAMAGE_DEALT + damage_percent * (MAX_DAMAGE_DEALT - MIN_DAMAGE_DEALT))
 				
 			# Ensure damage doesn't exceed maximum
 			damage = min(damage, MAX_DAMAGE_DEALT)
-			
-			print("[", control_set, "] Hit landed! Dealing ", damage, " damage with ", current_endurance, " endurance (", int(damage_percent * 100), "% power)")
 			
 			# Apply damage to the other fighter - pass our position for knockback direction
 			body.take_damage(damage, global_position)
@@ -495,12 +455,10 @@ func _on_hit_area_body_entered(body):
 					current_endurance -= BLOCK_ATTACKER_ENDURANCE_COST
 				else:
 					current_endurance = 0
-					
-				print("[", control_set, "] Hit a block! Extra endurance penalty: ", endurance_before, " -> ", current_endurance)
 			
 			# Disable knuckle box to prevent multiple hits
 			$hit_area/knuckle_box.disabled = true
 			
 			# Add extra camera shake on impact based on damage
-			var impact_strength = float(damage) / MAX_DAMAGE_DEALT
+			var impact_strength: float = float(damage) / MAX_DAMAGE_DEALT
 			camera.set_shake_str(Vector2(5, 5) * impact_strength)
